@@ -7,6 +7,9 @@ set $mod Mod4
 
 # --- Application shortcut keys ----------------------------------------------
 
+bindsym $mod+d exec dmenu_run
+#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+
 bindsym $mod+Return exec gnome-terminal
 
 
@@ -23,13 +26,6 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
-
-# start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # --- Focus ------------------------------------------------------------------
 # Use vi-style movement keys
@@ -161,4 +157,5 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-
+exec /usr/bin/gnome-settings-daemon
+exec /usr/bin/gnome-sound-applet
