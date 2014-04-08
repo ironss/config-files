@@ -5,5 +5,5 @@ config-files
 
 2. Create symlinks as follows:
 
-   * .config/i3/config -> somewhere/i3/config
-   * .config/i3
+   * .config/i3 -> somewhere/i3
+   * .config/i3status -> somewhere/i3status
