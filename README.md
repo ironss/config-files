@@ -7,3 +7,4 @@ config-files
 
    * .config/i3 -> somewhere/i3
    * .config/i3status -> somewhere/i3status
+
