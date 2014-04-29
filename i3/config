@@ -181,8 +181,7 @@ bindsym $mod+x debuglog toggle
 for_window [title="Eclipse"] floating enable
 for_window [class="Eclipse"] floating disable
 
-assign [class="Eclipse" title="^
-.*"] 3
+assign [class="Eclipse" title="^.*"] 3
 assign [class="Eclipse" ] 4
 
 assign [class="Thunderbird"] 1
