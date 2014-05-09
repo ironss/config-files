@@ -206,6 +206,6 @@ for_window [class="rdesktop"] floating enable
 # Window settings for OpenCPN
 #assign [class="Opencpn"] 5
 for_window [class="Opencpn" ] floating enable, border none
-for_window [class="Opencpn" title=".*"] floating disable
+for_window [class="Opencpn" title=".*"] floating disable, border normal
 for_window [class="Opencpn" title="ocpnToolbarDialog"] floating enable, border none
-
+# for_window [class="Opencpn" title="OpenCPN .*" floating enable, border normal 
