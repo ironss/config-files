@@ -186,3 +186,7 @@ assign [class="Eclipse" ] 4
 
 assign [class="Thunderbird"] 1
 
+
+for_window [class="rdesktop"] floating enable
+assign [class="rdesktop"] 1
+
