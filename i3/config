@@ -110,10 +110,6 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
-# Multiple monitors
-#workspace 1 output LVDS-1
-#workspace 2 output VGA-1
-
 
 # --- Resize -----------------------------------------------------------------
 
@@ -159,3 +155,14 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 exec /usr/bin/gnome-settings-daemon
 exec /usr/bin/gnome-sound-applet
+exec /usr/bin/nm-applet
+exec /usr/bin/dropbox start
+
+
+assign [class="Opencpn"] 5
+for_window [class="Opencpn" title="OpenCPN .*"] floating disable
+for_window [class="Opencpn" title="Options"] floating disable
+for_window [class="Opencpn" title="Route Manager"] floating disable
+for_window [class="Opencpn" title="ocpnToolbarDialog"] floating enable, border 1pixel
+for_window [class="Opencpn" title="^$"] floating enable, border none
+
