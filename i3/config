@@ -13,7 +13,6 @@ bindsym $mod+d exec dmenu_run
 bindsym $mod+Return exec gnome-terminal
 
 
-
 # Kill focused window
 bindsym $mod+Shift+q kill
 
@@ -26,6 +25,7 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
+
 
 # --- Focus ------------------------------------------------------------------
 # Use vi-style movement keys
@@ -165,13 +165,14 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 
-# Start i3bar
+# --- Status bar -------------------------------------------------------------
 # See man i3status and ~/.config/i3status/config
 
 bar {
         status_command i3status
 #        mode hide
 }
+
 
 # --- Control i3 -------------------------------------------------------------
 
@@ -187,6 +188,7 @@ exec /usr/bin/gnome-settings-daemon
 exec /usr/bin/gnome-sound-applet
 exec /usr/bin/nm-applet
 exec /usr/bin/dropbox start
+
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
