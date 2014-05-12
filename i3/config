@@ -199,6 +199,7 @@ assign [class="Eclipse" ] 4
 assign [class="Thunderbird"] 1
 
 # Window settings for rdesktop: Floating so that it has the size requested
+assign [class="rdesktop"] 1
 for_window [class="rdesktop"] floating enable
 
 # Window settings for OpenCPN
