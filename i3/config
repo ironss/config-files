@@ -13,10 +13,11 @@ bindsym $mod+d exec dmenu_run
 bindsym $mod+Return exec gnome-terminal
 
 
-
 # Kill focused window
 bindsym $mod+Shift+q kill
 
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -26,6 +27,7 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
+
 
 # --- Focus ------------------------------------------------------------------
 # Use vi-style movement keys
@@ -165,13 +167,14 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 
-# Start i3bar
+# --- Status bar -------------------------------------------------------------
 # See man i3status and ~/.config/i3status/config
 
 bar {
         status_command i3status
 #        mode hide
 }
+
 
 # --- Control i3 -------------------------------------------------------------
 
@@ -187,6 +190,7 @@ exec /usr/bin/gnome-settings-daemon
 exec /usr/bin/gnome-sound-applet
 exec /usr/bin/nm-applet
 exec /usr/bin/dropbox start
+
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
@@ -205,6 +209,7 @@ for_window [class="rdesktop"] floating enable
 # Window settings for OpenCPN
 #assign [class="Opencpn"] 5
 for_window [class="Opencpn" ] floating enable, border none
-for_window [class="Opencpn" title=".*"] floating disable
+for_window [class="Opencpn" title=".*"] floating disable, border normal
 for_window [class="Opencpn" title="ocpnToolbarDialog"] floating enable, border none
+for_window [class="Opencpn" title="OpenCPN .*"] floating disable, border none
 

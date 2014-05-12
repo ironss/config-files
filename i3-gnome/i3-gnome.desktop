@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=i3 Gnome
+Comment=i3 window manager running in a Gnome session
+Exec=gnome-session --session=i3-gnome
+TryExec=gnome-session
+Icon=
+Type=Application
