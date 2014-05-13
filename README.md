@@ -24,3 +24,11 @@ i3 Setup
    This is a live setting, and removes the background immediately.
 
 
+Things to work on
+-----------------
+
+1. Unlock default keyring on login
+
+2. Backup is failing
+
+3. 
