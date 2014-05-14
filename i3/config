@@ -180,8 +180,8 @@ bar {
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Logging out. Confirm ---> ' -b 'Yes, logout' 'i3-msg exit'"
-bindsym $mod+Shift+x exec "gnome-session-quit --logout"
+bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Logging out. Confirm ---> ' -b 'Yes, logout' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 
 # bindsym $mod+x debuglog toggle
 
