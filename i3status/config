@@ -14,6 +14,7 @@ general {
 #order += "ipv6"
 #order += "disk /"
 order += "disk /home"
+order += "disk /home2"
 #order += "run_watch DHCP"
 #order += "run_watch VPN"
 order += "wireless wlan0"
@@ -21,8 +22,8 @@ order += "ethernet eth0"
 order += "battery 0"
 order += "load"
 order += "volume master"
-order += "tztime local"
 order += "tztime utc"
+order += "tztime local"
 
 wireless wlan0 {
         format_up = "W:(%essid %quality) %ip"
@@ -37,7 +38,7 @@ ethernet eth0 {
 }
 
 battery 0 {
-        format = "%status %percentage %remaining"
+        format = "Batt:%status %percentage %remaining"
 }
 
 run_watch DHCP {
@@ -57,17 +58,27 @@ tztime utc {
         timezone = "UTC"
 }
 
+time {
+   format = "%Y-%m-%d %H:%M:%S"
+}
+
+
 load {
-        format = "%1min"
+        format = "Load:%1min %5min %15min"
 }
 
 disk "/" {
-        format = "%free"
+        format = "%free (%percentage_free)"
 }
 
 disk "/home" {
-        format = "H:%free"
+        format = "H:%free (%percentage_free)"
 }
+
+disk "/home2" {
+        format = "H2:%free (%percentage_free)"
+}
+
 
 volume master {
   format = "♪:%volume"

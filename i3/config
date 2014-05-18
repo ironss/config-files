@@ -13,10 +13,11 @@ bindsym $mod+d exec dmenu_run
 bindsym $mod+Return exec gnome-terminal
 
 
-
 # Kill focused window
 bindsym $mod+Shift+q kill
 
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
@@ -26,6 +27,7 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
 # font pango:DejaVu Sans Mono 10
+
 
 # --- Focus ------------------------------------------------------------------
 # Use vi-style movement keys
@@ -110,9 +112,31 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
+
 # Multiple monitors
-#workspace 1 output LVDS-1
-#workspace 2 output VGA-1
+# Commented out, because i3 does the right thing anyway
+
+#workspace  1 output LVDS-1
+#workspace  2 output VGA-1
+#workspace  3 output LVDS-1
+#workspace  4 output VGA-1
+#workspace  5 output LVDS-1
+#workspace  6 output VGA-1
+#workspace  7 output LVDS-1
+#workspace  8 output VGA-1
+#workspace  9 output LVDS-1
+#workspace 10 output VGA-1
+
+#workspace  1 output DVI-I-1
+#workspace  2 output VGA-1
+#workspace  3 output DVI-I-1
+#workspace  4 output VGA-1
+#workspace  5 output DVI-I-1
+#workspace  6 output VGA-1
+#workspace  7 output DVI-I-1
+#workspace  8 output VGA-1
+#workspace  9 output DVI-I-1
+#workspace 10 output VGA-1
 
 
 # --- Resize -----------------------------------------------------------------
@@ -122,17 +146,17 @@ mode "resize" {
 
         # Pressing left will shrink the window’s width.
         # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
+        # Pressing up will grow the window’s height.
+        # Pressing down will shrink the window’s height.
         bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left  resize shrink width 10 px or 10 ppt
-        bindsym Down  resize grow height 10 px or 10 ppt
-        bindsym Up    resize shrink height 10 px or 10 ppt
+        bindsym Down  resize shrink height 10 px or 10 ppt
+        bindsym Up    resize grow height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
 
         # back to normal: Enter or Escape
@@ -143,7 +167,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 
-# Start i3bar
+# --- Status bar -------------------------------------------------------------
 # See man i3status and ~/.config/i3status/config
 
 bar {
@@ -151,11 +175,42 @@ bar {
 #        mode hide
 }
 
+
 # --- Control i3 -------------------------------------------------------------
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Logging out. Confirm ---> ' -b 'Yes, logout' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 
-exec /usr/bin/gnome-settings-daemon
+# bindsym $mod+x debuglog toggle
+
+
+# -- Auto-start -------------------------------------------------------------
+#exec /usr/bin/gnome-settings-daemon
 exec /usr/bin/gnome-sound-applet
+exec /usr/bin/nm-applet
+exec /usr/bin/dropbox start
+
+
+# --- Window settings --------------------------------------------------------
+# Window settings for Eclipse
+for_window [title="Eclipse"] floating enable
+for_window [class="Eclipse"] floating disable
+assign [class="Eclipse" title="^.*"] 3
+assign [class="Eclipse" ] 4
+
+# Window settings for Thunderbird
+assign [class="Thunderbird"] 1
+
+# Window settings for rdesktop: Floating so that it has the size requested
+assign [class="rdesktop"] 1
+for_window [class="rdesktop"] floating enable
+
+# Window settings for OpenCPN
+#assign [class="Opencpn"] 5
+for_window [class="Opencpn" ] floating enable, border none
+for_window [class="Opencpn" title=".*"] floating disable, border normal
+for_window [class="Opencpn" title="ocpnToolbarDialog"] floating enable, border none
+for_window [class="Opencpn" title="OpenCPN .*"] floating disable, border none
+
