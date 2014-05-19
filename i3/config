@@ -180,13 +180,14 @@ bar {
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Logging out. Confirm ---> ' -b 'Yes, logout' 'i3-msg exit'"
+bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Logging out. Confirm ---> ' -b 'Yes, logout' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 
 # bindsym $mod+x debuglog toggle
 
 
 # -- Auto-start -------------------------------------------------------------
-exec /usr/bin/gnome-settings-daemon
+#exec /usr/bin/gnome-settings-daemon
 exec /usr/bin/gnome-sound-applet
 exec /usr/bin/nm-applet
 exec /usr/bin/dropbox start
