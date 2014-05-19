@@ -33,13 +33,47 @@ import os
 
 
 menuitems = [
-              ("Log out"     , "gnome-log-out", "gnome-session-quit --logout"   ),
-              ("Switch user", "system-users"         , "dm-tool switch-to-greeter"     ),
               ("Power off"  , "system-shutdown-panel", "gnome-session-quit --power-off"),
+              ("Log out"    , "gnome-log-out"        , "gnome-session-quit --logout"   ),
+              ("Switch user", "system-users"         , "dm-tool switch-to-greeter"     ),
             ]
 
 
+import re
+
+class User:
+   def __init__(self, username, uid, fullname):
+      self.username = username
+      self.uid = uid
+      self.fullname = fullname
+      
+   def __str__(self):
+      return self.fullname + '(' + '%d' % self.uid + ':' + self.username + ')'
+
+
+def find_login_users():
+   logins = '/etc/login.defs'
+   UID_MIN = 1000 # TODO: Extract this from /etc/login.defs
+   
+   passwd = '/etc/passwd'
+   
+   users = []
+   lines = open(passwd, 'r').readlines()
+   for l in lines:
+      results = re.findall('^([^:]*):[^:]*:([^:]*):[^:]*:([^:,]*).+/bin/bash', l) # TODO: Make this more readable
+      for user_details in results:
+         if len(user_details) > 0:
+            user = user_details[0]
+            uid = int(user_details[1])
+            fullname = user_details[2]
+            if uid >= UID_MIN:
+               users.append(User(user, uid, fullname))
+   users.sort(key=lambda u: u.fullname)
+   return users
+
+
 if __name__ == "__main__":
+
   ind = appindicator.Indicator ("example-simple-client",
                               "indicator-messages",
                               appindicator.CATEGORY_APPLICATION_STATUS)
@@ -54,9 +88,19 @@ if __name__ == "__main__":
      menu_item = gtk.ImageMenuItem(m[0])
      menu_item.set_image(gtk.image_new_from_icon_name(m[1], gtk.ICON_SIZE_MENU))
      menu_item.set_always_show_image(True)
-     #menu.append(menu_item)
-     #menu_item.connect("activate", menu_action, m[2])
      menu_item.connect("activate", lambda w, cmd: os.system(cmd), m[2])
+     menu_item.show()
+     menu.append(menu_item)
+
+  users = find_login_users()
+  
+  for u in users:
+     menu_item = gtk
+     menu_item = gtk.ImageMenuItem(u.fullname)
+     #menu_item.set_image(gtk.image_new_from_stock(gtk.STOCK_INFO, gtk.ICON_SIZE_MENU))
+     #menu_item.set_image(gtk.image_new_from_file('/usr/share/pixmaps/faces/soccerball.png')) # TODO: Load from $HOME/.face or background image
+     menu_item.set_always_show_image(True)
+     menu_item.connect("activate", lambda w, username: os.system('dm-tool switch-to-user %s' %  username), u.username)
      menu_item.show()
      menu.append(menu_item)
 
