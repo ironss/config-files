@@ -187,11 +187,11 @@ bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 
 
 # -- Auto-start -------------------------------------------------------------
-#exec /usr/bin/gnome-settings-daemon
-exec /usr/bin/gnome-sound-applet
-exec /usr/bin/nm-applet
-exec /usr/bin/dropbox start
-
+#exec --no-startup-id /usr/bin/gnome-settings-daemon
+exec --no-startup-id /usr/bin/gnome-sound-applet
+#exec --no-startup-id /usr/bin/nm-applet
+exec --no-startup-id /usr/bin/dropbox start
+exec --no-startup-id i3-gnome-logout
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
