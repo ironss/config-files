@@ -191,6 +191,7 @@ bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 exec /usr/bin/gnome-sound-applet
 exec /usr/bin/nm-applet
 exec /usr/bin/dropbox start
+exec --no-startup-id /home/stephen/bin/i3-gnome-logout
 
 
 # --- Window settings --------------------------------------------------------
