@@ -33,9 +33,9 @@ import os
 
 
 menuitems = [
-              ("Power off"  , "system-shutdown-panel", "gnome-session-quit --power-off"),
-              ("Log out"    , "gnome-log-out"        , "gnome-session-quit --logout"   ),
-              ("Switch user", "system-users"         , "dm-tool switch-to-greeter"     ),
+              ("Shut Down"  , "system-shutdown-panel", "gnome-session-quit --power-off"),
+              ("Log Out"    , "gnome-log-out"        , "gnome-session-quit --logout"   ),
+              ("Switch User", "system-users"         , "dm-tool switch-to-greeter"     ),
             ]
 
 
