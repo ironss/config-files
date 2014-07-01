@@ -31,4 +31,9 @@ Things to work on
 
 2. Backup is failing
 
-3. 
+3. On a new Ubuntu installation, I had to manually install
+   i3
+   i3status
+   gnome-settings-daemon
+   python-appindicator
+
