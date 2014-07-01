@@ -5,6 +5,9 @@
 set $mod Mod4
 
 # Display connections
+# There is no way to do alternative configurations
+# except by calling an external script that would make these
+# changes.
 
 # alisa
 set $display_L eDP1
@@ -17,6 +20,7 @@ set $display_R HDMI1
 # WS3022
 #set display_L DVI-I-1
 #set display_R VGA-1
+
 
 # --- Application shortcut keys ----------------------------------------------
 
