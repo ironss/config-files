@@ -200,10 +200,12 @@ exec --no-startup-id i3-gnome-logout
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
+# There are so many windows in eclipse, it is impossible to keep track of them
+# They generally don't have proper titles or class, so do the best we can.
 for_window [title="Eclipse"] floating enable
 for_window [class="Eclipse"] floating disable
-assign [class="Eclipse" title="^.*"] 3
-assign [class="Eclipse" ] 4
+assign [class="Eclipse" title="^.*"] 6
+assign [class="Eclipse" ] 5
 
 # Window settings for Thunderbird
 assign [class="Thunderbird"] 1
@@ -218,4 +220,8 @@ for_window [class="Opencpn" ] floating enable, border none
 for_window [class="Opencpn" title=".*"] floating disable, border normal
 for_window [class="Opencpn" title="ocpnToolbarDialog"] floating enable, border none
 for_window [class="Opencpn" title="OpenCPN .*"] floating disable, border none
+
+# Window settings for Skype
+assign [class="Skype"] 10
+#for_window [class="Skype" ] floating enable
 
