@@ -14,13 +14,12 @@ set $display_L eDP1
 set $display_R HDMI1
 
 # lucia
-#set display_L LDVS-1
-#set display_R VGA-1
+#set $display_L VGA-1
+#set $display_R LDVS-1
 
-# WS3022
-#set display_L DVI-I-1
-#set display_R VGA-1
-
+# leonora
+#set $display_L VGA-1
+#set $display_R LDVS-1
 
 # --- Application shortcut keys ----------------------------------------------
 
