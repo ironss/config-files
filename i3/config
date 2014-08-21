@@ -21,6 +21,10 @@ set $display_R HDMI1
 #set $display_L VGA-1
 #set $display_R LDVS-1
 
+# violetta
+#set $display_L VGA-1
+#set $display_R LDVS-1
+
 # --- Application shortcut keys ----------------------------------------------
 
 bindsym $mod+d exec dmenu_run
