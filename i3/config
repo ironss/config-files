@@ -197,6 +197,7 @@ exec --no-startup-id /usr/bin/gnome-sound-applet
 #exec --no-startup-id /usr/bin/nm-applet
 exec --no-startup-id /usr/bin/dropbox start
 exec --no-startup-id i3-gnome-logout
+exec --no-startup-id /usr/bin/skype
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
@@ -213,6 +214,8 @@ assign [class="Thunderbird"] 1
 # Window settings for rdesktop: Floating so that it has the size requested
 assign [class="rdesktop"] 1
 for_window [class="rdesktop"] floating enable
+
+for_window [class="Gcalctool" ] floating enable
 
 # Window settings for OpenCPN
 #assign [class="Opencpn"] 5
