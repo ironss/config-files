@@ -9,19 +9,19 @@ set $mod Mod4
 # except by calling an external script that would make these
 # changes.
 
-# alisa
+# alisa (HP Envy 15)
 set $display_L eDP1
 set $display_R HDMI1
 
-# lucia
-#set $display_L VGA-1
-#set $display_R LDVS-0
+# lucia (Dell XPS M1210)
+#set $display_L LDVS-0
+#set $display_R VGA-1
 
-# leonora
+# leonora (Asus)
 #set $display_L VGA-1
 #set $display_R LDVS-1
 
-# violetta
+# violetta (Dell Inspiron 6400)
 #set $display_L VGA-1
 #set $display_R LDVS-1
 
