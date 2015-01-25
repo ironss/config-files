@@ -9,8 +9,10 @@ i3 Setup
 
 2. Create symlinks as follows:
 
-   * .config/i3 -> somewhere/i3
-   * .config/i3status -> somewhere/i3status
+   * cd somewhere
+   * mkdir -p ~/.config/i3 && ln -s i3/config ~/.config/i3
+   * mkdir -p ~/.config/i3status && ln -s i3status/config ~/.config/i3status
+   * mkdir -p ~/bin && ln -s i3-gnome/i3-gnome-logout ~/bin
 
 3. Copy .desktop and .session files to the right places
 
@@ -23,17 +25,23 @@ i3 Setup
    
    This is a live setting, and removes the background immediately.
 
+5. Turn off unwanted Gnome startup applications
+   
+   * run gnome-session-properties
 
+
+Packages to install
+-------------------
+   * i3
+   * i3status
+   * gnome-settings-daemon
+   * gnome-control-center   (for gnome-sound-applet)
+   * python-appindicator    (for logout program)
+      
 Things to work on
 -----------------
 
 1. Unlock default keyring on login
 
 2. Backup is failing
-
-3. On a new Ubuntu installation, I had to manually install
-   i3
-   i3status
-   gnome-settings-daemon
-   python-appindicator
 
