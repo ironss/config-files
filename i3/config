@@ -14,16 +14,16 @@ set $display_L eDP1
 set $display_R HDMI1
 
 # lucia (Dell XPS M1210)
-#set $display_L LDVS-0
-#set $display_R VGA-1
+#set $display_L LVDS-0
+#set $display_R VGA-0
 
 # leonora (Asus)
 #set $display_L VGA-1
-#set $display_R LDVS-1
+#set $display_R LVDS-1
 
 # violetta (Dell Inspiron 6400)
 #set $display_L VGA-1
-#set $display_R LDVS-1
+#set $display_R LVDS-1
 
 # --- Application shortcut keys ----------------------------------------------
 
