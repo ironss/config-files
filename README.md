@@ -34,6 +34,7 @@ Packages to install
 -------------------
    * i3
    * i3status
+   * gnome-session
    * gnome-settings-daemon
    * gnome-control-center   (for gnome-sound-applet)
    * python-appindicator    (for logout program)
