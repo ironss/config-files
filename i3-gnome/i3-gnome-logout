@@ -67,17 +67,19 @@ def find_login_users():
 
    users = []
    passwd = '/etc/passwd'
-   lines = open(passwd, 'r').readlines()
-   for l in lines:
-      results = re.findall('^([^:]*):[^:]*:([^:]*):[^:]*:([^:,]*).+/bin/bash', l) # TODO: Make this more readable
-      for user_details in results:
-         if len(user_details) > 0:
-            user = user_details[0]
-            uid = int(user_details[1])
-            fullname = user_details[2]
-            if uid >= UID_MIN:
-               users.append(User(user, uid, fullname))
-   users.sort(key=lambda u: u.fullname)
+   with open(passwd, 'r') as f:
+       for l in f:
+          results = re.findall('^([^:]*):[^:]*:([^:]*):[^:]*:([^:,]*).+/bin/bash', l) # TODO: Make this more readable
+          for user_details in results:
+             if len(user_details) > 0:
+                user = user_details[0]
+                uid = int(user_details[1])
+                fullname = user_details[2]
+                if uid >= UID_MIN:
+                   users.append(User(user, uid, fullname))
+
+       users.sort(key=lambda u: u.fullname)
+
    return users
 
 
