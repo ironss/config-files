@@ -58,12 +58,10 @@ def find_login_users():
    with open(logins, 'r') as f:
        for l in f:
           results = re.findall('^(UID_MIN)\s+(\d+)', l)
-          #print l, results, len(results)
           if len(results) != 0:
              UID_MIN_tup = results[0]
              UID_MIN_str = UID_MIN_tup[1]
              UID_MIN = int(UID_MIN_str)
-             print '*****', UID_MIN_tup, UID_MIN_str, UID_MIN+1
 
    users = []
    passwd = '/etc/passwd'
