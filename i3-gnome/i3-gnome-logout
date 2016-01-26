@@ -52,12 +52,21 @@ class User:
 
 
 def find_login_users():
+   # Find UID_MIN, the lowest UID for a real user
+   UID_MIN = None
    logins = '/etc/login.defs'
-   UID_MIN = 1000 # TODO: Extract this from /etc/login.defs
-   
-   passwd = '/etc/passwd'
-   
+   with open(logins, 'r') as f:
+       for l in f:
+          results = re.findall('^(UID_MIN)\s+(\d+)', l)
+          #print l, results, len(results)
+          if len(results) != 0:
+             UID_MIN_tup = results[0]
+             UID_MIN_str = UID_MIN_tup[1]
+             UID_MIN = int(UID_MIN_str)
+             print '*****', UID_MIN_tup, UID_MIN_str, UID_MIN+1
+
    users = []
+   passwd = '/etc/passwd'
    lines = open(passwd, 'r').readlines()
    for l in lines:
       results = re.findall('^([^:]*):[^:]*:([^:]*):[^:]*:([^:,]*).+/bin/bash', l) # TODO: Make this more readable
