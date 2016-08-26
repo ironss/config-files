@@ -10,9 +10,9 @@ i3 Setup
 2. Create symlinks as follows:
 
    * cd somewhere
-   * mkdir -p ~/.config/i3 && ln -s i3/config ~/.config/i3
-   * mkdir -p ~/.config/i3status && ln -s i3status/config ~/.config/i3status
-   * mkdir -p ~/bin && ln -s i3-gnome/i3-gnome-logout ~/bin
+   * mkdir -p ~/.config/i3 && ln -s $PWD/i3/config ~/.config/i3
+   * mkdir -p ~/.config/i3status && ln -s $PWD/i3status/config ~/.config/i3status
+   * mkdir -p ~/bin && ln -s $PWD/i3-gnome/i3-gnome-logout ~/bin
 
 3. Copy .desktop and .session files to the right places
 
