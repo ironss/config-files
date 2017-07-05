@@ -13,7 +13,7 @@ general {
 }
 
 order += "disk /home"
-order += "wireless wlo1"
+order += "wireless wlp7s0"
 order += "ethernet eno1"
 order += "cpu_usage"
 order += "load"
@@ -28,6 +28,11 @@ disk "/home" {
 }
 
 wireless wlo1 {
+    format_up = "W:(%essid %quality) %ip"
+    format_down = "W:down"
+}
+
+wireless wlp7s0 {
     format_up = "W:(%essid %quality) %ip"
     format_down = "W:down"
 }
