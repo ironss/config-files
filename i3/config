@@ -10,8 +10,8 @@ set $mod Mod4
 # changes.
 
 # alisa/violetta (HP Envy 15)
-set $display_L eDP1
-set $display_R HDMI1
+#set $display_L eDP1
+#set $display_R HDMI1
 
 # lucia (Dell XPS M1210)
 #set $display_L LVDS-0
@@ -24,6 +24,10 @@ set $display_R HDMI1
 # violetta (Dell Inspiron 6400)
 #set $display_L VGA-1
 #set $display_R LVDS-1
+
+# ws3184
+set $display_L DVI-I-1
+set $display_R VGA-1
 
 # --- Application shortcut keys ----------------------------------------------
 
@@ -194,19 +198,20 @@ bindsym $mod+Shift+e exec "gnome-session-quit --logout"
 
 # bindsym $mod+x debuglog toggle
 
-bindsym Print exec "scrot -u '%Y-%m-%d_%H.%M.%S.png' -e 'mv $f ~/shots/'
+bindsym Print exec "scrot -u '%Y-%m-%d_%H.%M.%S.png' -e 'mv $f ~/screenshots/'
 
 
 # -- Auto-start -------------------------------------------------------------
-exec --no-startup-id i3-gnome-logout
+#exec --no-startup-id i3-gnome-logout
 #exec --no-startup-id /usr/bin/gnome-session
 #exec --no-startup-id /usr/bin/unity-settings-daemon
-exec --no-startup-id /usr/bin/gnome-settings-daemon
+#exec --no-startup-id /usr/bin/gnome-settings-daemon
 #exec --no-startup-id /usr/bin/gnome-sound-applet
-exec --no-startup-id /usr/local/bin/pa-applet
-exec --no-startup-id /usr/bin/nm-applet
-exec --no-startup-id /usr/bin/dropbox start
+#exec --no-startup-id /usr/local/bin/pa-applet
+#exec --no-startup-id /usr/bin/nm-applet
+#exec --no-startup-id /usr/bin/dropbox start
 #exec --no-startup-id /usr/bin/skype
+exec --no-startup-id gnome-flashback
 
 # --- Window settings --------------------------------------------------------
 # Window settings for Eclipse
