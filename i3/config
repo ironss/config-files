@@ -57,10 +57,10 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # Use vi-style movement keys
 
 # Change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+#bindsym $mod+h focus left
+#bindsym $mod+j focus down
+#bindsym $mod+k focus up
+#bindsym $mod+l focus right
 
 bindsym $mod+Left  focus left
 bindsym $mod+Down  focus down
@@ -68,10 +68,10 @@ bindsym $mod+Up    focus up
 bindsym $mod+Right focus right
 
 # Move focused window
-bindsym $mod+Shift+H move left
-bindsym $mod+Shift+J move down
-bindsym $mod+Shift+K move up
-bindsym $mod+Shift+L move right
+#bindsym $mod+Shift+H move left
+#bindsym $mod+Shift+J move down
+#bindsym $mod+Shift+K move up
+#bindsym $mod+Shift+L move right
 
 bindsym $mod+Shift+Left  move left
 bindsym $mod+Shift+Down  move down
@@ -160,10 +160,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will grow the window’s height.
         # Pressing down will shrink the window’s height.
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize shrink height 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+#        bindsym h resize shrink width 10 px or 10 ppt
+#        bindsym j resize shrink height 10 px or 10 ppt
+#        bindsym k resize grow height 10 px or 10 ppt
+#        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left  resize shrink width 10 px or 10 ppt
@@ -203,9 +203,6 @@ bindsym Print exec "scrot -u '%Y-%m-%d_%H.%M.%S.png' -e 'mv $f ~/screenshots/'
 
 # -- Auto-start -------------------------------------------------------------
 #exec --no-startup-id i3-gnome-logout
-#exec --no-startup-id /usr/bin/gnome-session
-#exec --no-startup-id /usr/bin/unity-settings-daemon
-#exec --no-startup-id /usr/bin/gnome-settings-daemon
 #exec --no-startup-id /usr/bin/gnome-sound-applet
 #exec --no-startup-id /usr/local/bin/pa-applet
 #exec --no-startup-id /usr/bin/nm-applet
@@ -214,22 +211,23 @@ bindsym Print exec "scrot -u '%Y-%m-%d_%H.%M.%S.png' -e 'mv $f ~/screenshots/'
 exec --no-startup-id gnome-flashback
 
 # --- Window settings --------------------------------------------------------
+ # Use xprop to find class, instance and title of a window.
+ # WM_CLASS(STRING) = "instance", "class"
+ # WM_NAME(STRING) = "title"
+
+for_window [class="Gnome-calculator" ] floating enable
+
 # Window settings for Eclipse
 # There are so many windows in eclipse, it is impossible to keep track of them
 # They generally don't have proper titles or class, so do the best we can.
-for_window [title="Eclipse"] floating enable
-for_window [class="Eclipse"] floating disable
-assign [class="Eclipse" title="^.*"] 6
+for_window [class="Eclipse"] floating enable
+for_window [class="Eclipse" title=".*Eclipse IDE.*"] floating disable
+assign [class="Eclipse" title=".*Eclipse IDE.*"] 6
 assign [class="Eclipse" ] 5
-
-# Window settings for Thunderbird
-assign [class="Thunderbird"] 1
 
 # Window settings for rdesktop: Floating so that it has the size requested
 assign [class="rdesktop"] 1
 for_window [class="rdesktop"] floating enable
-
-for_window [class="Gcalctool" ] floating enable
 
 # Window settings for OpenCPN
 #assign [class="Opencpn"] 5
