@@ -1,6 +1,8 @@
 # i3 config file (v4)
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
-# Generated on first-use on Ubuntu 18.04 LTS
+# Stephen Irons
+# See http://i3wm.org/docs/userguide.html
+
+set $mod Mod4
 
 # Display connections
 # There is no way to do alternative configurations
@@ -19,6 +21,24 @@ set $display_R HDMI-1
 #set $display_L LVDS-0
 #set $display_R VGA-0
 
+# leonora (Asus)
+#set $display_L VGA-1
+#set $display_R LVDS-1
+
+# violetta (Dell Inspiron 6400)
+#set $display_L VGA-1
+#set $display_R LVDS-1
+
+# ws3184
+set $display_L DVI-I-1
+set $display_R VGA-1
+
+# --- Application shortcut keys ----------------------------------------------
+
+bindsym $mod+d exec dmenu_run
+bindsym $mod+Shift+d exec --no-startup-id i3-dmenu-desktop
+
+bindsym $mod+Return exec gnome-terminal
 
 set $mod Mod4
 
