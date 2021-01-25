@@ -7,9 +7,13 @@
 # except by calling an external script that would make these
 # changes.
 
-# alisa/violetta (HP Envy 15)
-set $display_L eDP1
-set $display_R HDMI1
+# alisa/violetta (HP Envy 15) running Ubuntu 18.04
+set $display_L eDP-1
+set $display_R HDMI-1
+
+# alisa/violetta (HP Envy 15) running Ubuntu 17.10
+#set $display_L eDP1
+#set $display_R HDMI1
 
 # lucia (Dell XPS M1210)
 #set $display_L LVDS-0
@@ -179,12 +183,29 @@ bar {
 }
 
 # exec --no-startup-id /usr/local/bin/pa-applet   # Does not compile under 18.04
+exec --no-startup-id /usr/bin/gnome-flashback
 exec --no-startup-id /usr/bin/nm-applet
+#exec --no-startup-id /usr/lib/gsd-xsettings
+#exec_always --no-startup-id gnome-power-manager
 
+# Assign application windows to various desktops
+# To find window details, run 'xprop' then click in the window
+# WMCLASS(STRING) = "gedit", "Gedit"                                      # i3 criteria: 'instance', class respectively
+# WM_WINDOW_ROLE(STRING) = "gedit-window-1525382437-291168-1-alisa"       # i3 criterion: 'window_role'
+# _NET_WM_WINDOW_TYPE(ATOM) = _NET_WM_WINDOW_TYPE_NORMAL                  # i3 criterion: 'window_type', values are 'normal', 'dialog', 'utility', 'toolbar', 'splash', 'menu', 'dropdown_menu', 'popup_menu', 'tooltip' and 'notification'
+# WM_NAME(STRINGS) = "*config (~/.config/i3) - gedit                       # i3 criterion: title
 
-for_window [class="Gcalctool" ] floating enable
+# Make Gnome calculator a floating window
+for_window [ class="Gnome-calculator" ] floating enable
 
-# Window settings for Skype
-assign [class="Skype"] 10
-#for_window [class="Skype" ] floating enable
+# Skype goes to desktop 10
+assign [ class="Skype" ] 10
+#for_window [ class="Skype" ] floating enable
+
+# Slack goes to desktop 10
+assign [class="Slack" ] 10
+#for_window [ class="Slack" ] floating enable
+
+# Eclipse goes to desktop 6
+#assign [ class="Eclipse" ] 6
 
