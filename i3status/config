@@ -13,13 +13,20 @@ general {
 }
 
 order += "disk /home"
-order += "wireless wlp7s0"
+
+#order += "wireless wlo1"
+order += "wireless wlp3s0"
+#order += "wireless wlp7s0"
+
 order += "wireless wlx0019869148ed"
-order += "ethernet eno1"
+#order += "ethernet eno1"
+order += "ethernet enx482ae3831c79"
+
 order += "cpu_usage"
 order += "load"
 order += "battery 0"
 order += "volume master"
+
 order += "tztime utc"
 order += "tztime local"
 
@@ -29,6 +36,11 @@ disk "/home" {
 }
 
 wireless wlo1 {
+    format_up = "W:(%essid %quality) %ip"
+    format_down = "W:down"
+}
+
+wireless wlp3s0 {
     format_up = "W:(%essid %quality) %ip"
     format_down = "W:down"
 }
@@ -44,6 +56,12 @@ wireless wlx0019869148ed {
 }
 
 ethernet eno1 {
+    # if you use %speed, i3status requires root privileges
+    format_up = "E:%ip"
+    format_down = "E:down"
+}
+
+ethernet enx482ae3831c79 {
     # if you use %speed, i3status requires root privileges
     format_up = "E:%ip"
     format_down = "E:down"
