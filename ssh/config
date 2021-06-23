@@ -1,0 +1,40 @@
+Host *
+  ControlMaster  auto
+  #ControlPath    ~/.ssh/persist/%r@%h:%p
+  ControlPath    ~/.ssh/persist/%r@%n:%p
+  ControlPersist 1h
+
+Host rock64.local
+  ForwardX11 yes
+
+Host ws3184.local,WS
+  ForwardX11 yes
+
+Host 192.168.6.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
+Host 192.168.7.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
+
+# Github uses the ssh key to identify the github user. If you have two github accounts
+# you need to have two separate ssh keys
+
+Host github.com-private
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa-stephen@irons.nz
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  IdentitiesOnly yes
+
+Host github.com-iotec
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa-stephen.irons@iotec.space
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  IdentitiesOnly yes
+
