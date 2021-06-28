@@ -25,7 +25,7 @@ Host 192.168.7.*
 Host github.com-private
   HostName github.com
   User git
-  IdentityFile ~/.ssh/id_rsa-stephen@irons.nz
+  IdentityFile ~/.ssh/id_rsa-ironss+%l@users.noreply.github.com
   PreferredAuthentications publickey
   PasswordAuthentication no
   IdentitiesOnly yes
@@ -33,7 +33,7 @@ Host github.com-private
 Host github.com-iotec
   HostName github.com
   User git
-  IdentityFile ~/.ssh/id_rsa-stephen.irons@iotec.space
+  IdentityFile ~/.ssh/id_rsa-stephen.irons+%l@iotec.space
   PreferredAuthentications publickey
   PasswordAuthentication no
   IdentitiesOnly yes
