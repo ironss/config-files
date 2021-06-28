@@ -4,17 +4,14 @@ Host *
   ControlPath    ~/.ssh/persist/%r@%n:%p
   ControlPersist 1h
 
-Host rock64.local
+# Enable X11 forwarding on .local machines
+Host *.local
   ForwardX11 yes
 
-Host ws3184.local,WS
-  ForwardX11 yes
 
-Host 192.168.6.*
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-
-Host 192.168.7.*
+# BBB and BBGW net-over-USB connections
+# Ignore the host key, because it changes when a different device is connected
+Host 192.168.6.*,192.168.7.*
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
 
