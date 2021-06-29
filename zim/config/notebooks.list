@@ -1,9 +1,9 @@
 [NotebookList]
 Default=
-1=~/zim-notebooks/Notes
+1=~/Sync/zim-notebooks/Notes
 
 [Notebook 1]
-uri=~/zim-notebooks/Notes
+uri=~/Sync/zim-notebooks/Notes
 name=Notes
 interwiki=None
 icon=None
