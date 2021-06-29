@@ -28,3 +28,29 @@ seems better, but has the following problems:
 * The gnome-theme is pretty ugly, with big fonts and a big white border around gnome
   terminal. 
 
+
+ssh configuration
+=================
+
+* Manually copy ./ssh/config into ~/.ssh/config
+
+* If you make changes, you need to manually copy ~/.ssh/config back to ./ssh/config
+
+* TODO: See whether we can use a symlink for the configuration file
+
+
+Zim configuration
+=================
+
+* In the checkout directory
+
+    * ln -s $(pwd)/zim/config/style.conf ~/.config/zim/style.conf
+    
+    * ln -s $(pwd)/zim/templates ~/.local/share/zim/templates
+
+* TODO: See whether we should rather link the entire subdirs
+
+    * ln -s $(pwd)/zim/config ~/.config/zim
+    
+    * ln -s $(pwd)/zim/share ~/.local/share/zim
+
