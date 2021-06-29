@@ -44,12 +44,6 @@ Zim configuration
 
 * In the checkout directory
 
-    * ln -s $(pwd)/zim/config/style.conf ~/.config/zim/style.conf
-    
-    * ln -s $(pwd)/zim/templates ~/.local/share/zim/templates
-
-* TODO: See whether we should rather link the entire subdirs
-
     * ln -s $(pwd)/zim/config ~/.config/zim
     
     * ln -s $(pwd)/zim/share ~/.local/share/zim
