@@ -1,11 +1,11 @@
 ZIM_NOTEBOOK=$1
-ZIM_PAGE="Public"
+ZIM_PAGE="Public IPFS Site"
 ZIM_EXPORT_DIR=/home/iros/zim-export
-ZIM_OUT_PAGE=$ZIM_EXPORT_DIR/$ZIM_PAGE/index.html
+ZIM_OUT_PAGE="$ZIM_EXPORT_DIR/$ZIM_PAGE/Public IPFS Site.html"
 
-echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE"... >> /home/iros/out.txt
+echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
 
-zim --export --recursive --output=$ZIM_OUT_PAGE --overwrite --format=html --template=Default "$ZIM_NOTEBOOK" "$ZIM_PAGE" >> /home/iros/out.txt
+zim --export --recursive --output="$ZIM_OUT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
 
-echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE...done >> /home/iros/out.txt
+echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE...done
 
