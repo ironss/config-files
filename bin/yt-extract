@@ -1,0 +1,76 @@
+#! /usr/bin/python3
+
+# Requirements
+#   Package: youtube-dl
+#   Package: bpm-tools
+#   Python:  python3-pytaglib
+
+#  for f in Various\ Artists\ -\ Stephen\'s\ Memories/*; do BPM=$(ffmpeg -i "$f" -f f32le -ar 44100 -ac 1 - 2>/dev/null | bpm -f "%0.0f"); echo "$f: $BPM"; done
+
+import subprocess
+import re
+
+def download_video(video_url):
+    p1 = subprocess.Popen(['youtube-dl', '-fm4a', '--no-progress', video_url], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    output = p1.communicate()[0].decode('utf-8')
+    matches = re.search(r"(Destination: )(.+?m4a)", output)
+    filename = matches.group(2)
+    return filename
+
+def extract_audio(video_filename, audio_filename, overwrite=False):
+    p1 = subprocess.Popen(['ffmpeg', '-y', '-i', video_filename, '-vn', '-acodec', 'copy', audio_filename], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    output = p1.communicate()[0]
+
+def calculate_bpm(filename):
+    p1 = subprocess.Popen(['ffmpeg', '-y', '-i', filename, '-f', 'f32le', '-ar', '44100', '-ac', '1', '-'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    p2 = subprocess.Popen(['bpm', '-f', '%0.0f'], stdin=p1.stdout, stdout=subprocess.PIPE)
+    p1.stdout.close()
+    output = p2.communicate()[0]
+    return output.decode('utf-8')[:-1]
+
+import argparse
+import pathlib
+import taglib
+import os
+import os.path
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Extract song from video and tag.')
+    parser.add_argument('video', help='video URL_or_filename')
+    parser.add_argument('artist', help='name of the artist')
+    parser.add_argument('song', help='name of the song')
+    # whether to overwrite an existing music file
+    # whether to use the calculated BPM or a passed-in BPM
+    
+    args = parser.parse_args()
+    video_url_or_filename = args.video
+
+    video_filename = download_video(video_url_or_filename)
+    if video_filename is None:
+        video_filename = video_url_or_filename
+        exit(-1)
+
+    artist = args.artist
+    album = 'Online'
+    song = args.song
+    music_path = '/home/stephen/Music/Various Artists - Online'
+    music_filename = os.path.join(music_path, '{} - {}.m4a'.format(artist, song))
+    print(video_filename, music_filename)
+    
+    try:
+        os.makedirs(music_path)
+    except FileExistsError:
+        pass
+    extract_audio(video_filename, music_filename)
+    cbpm = calculate_bpm(music_filename)
+    print(music_filename, cbpm)
+
+    # Decide whether to use the calculated BPM, the passed-in BPM, or the BPM already in the file
+    bpm = cbpm
+    mf = taglib.File(music_filename)
+    mf.tags['ARTIST'] = artist
+    mf.tags['ALBUM'] = album
+    mf.tags['TITLE'] = song
+    mf.tags['BPM'] = bpm
+    mf.save()
+
