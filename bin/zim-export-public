@@ -1,40 +1,28 @@
-ZIM_NOTEBOOK=$1
+ZIM_NOTEBOOK=$HOME/workspace/technical-notes
 ZIM_PAGE="Public"
 
 EXPORT_DIR=$HOME/zim-export/$ZIM_PAGE
 EXPORT_PAGE="$EXPORT_DIR/$ZIM_PAGE.html"
 
-BROWSER=epiphany-browser
-
 
 echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
-
-rm $EXPORT_DIR -r
-zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
-cp $EXPORT_DIR/$ZIM_PAGE.html $EXPORT_DIR/index.html
-
-$BROWSER $EXPORT_DIR/index.html
-
+    rm $EXPORT_DIR -r
+    zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
+    cp $EXPORT_DIR/$ZIM_PAGE.html $EXPORT_DIR/index.html
 echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE...done
 
 
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
+    IPFS_HASH=$(ipfs add -Q -r $EXPORT_DIR)
+    echo /ipfs/$IPFS_HASH
 
-IPFS_HASH=$(ipfs add -Q -r $EXPORT_DIR)
-echo /ipfs/$IPFS_HASH
-$BROWSER http://localhost:8080/ipfs/$IPFS_HASH
-
-IPNS_HASH=$(ipfs name publish -Q --key=$ZIM_PAGE $IPFS_HASH)
-echo /ipns/$IPNS_HASH
-$BROWSER http://localhost:8080/ipns/$IPNS_HASH
-
+    IPNS_HASH=$(ipfs name publish -Q --lifetime 48h --ttl 300s --key=$ZIM_PAGE $IPFS_HASH)
+    echo /ipns/$IPNS_HASH
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...done
 
 
 echo $0: pinning "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
-
-ipfs pin remote rm --service=pinata --name=$ZIM_PAGE
-ipfs pin remote add --service=pinata --name=$ZIM_PAGE $IPFS_HASH
-
+    ipfs pin remote rm --service=pinata --name=$ZIM_PAGE
+    ipfs pin remote add --service=pinata --name=$ZIM_PAGE $IPFS_HASH
 echo $0: pinning "$ZIM_NOTEBOOK":"$ZIM_PAGE"...done
 
