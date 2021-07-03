@@ -1,7 +1,7 @@
 #! /bin/sh
 
 HOSTNAME=$(hostname)
-. /home/stephen/.credentials.backup-encrypt   # PASSPHRASE
+. $HOME/.secrets
 
 # Incremental backup of projects and generated content, with a full backup every 3 months.
 #
@@ -22,6 +22,27 @@ HOSTNAME=$(hostname)
 #   USB HDD at home
 #   USB HDD at work
 
+SRC="/home/stephen"
+
+DUPLICITY_INCLUDES="\
+   --include  $SRC/.local/share/geary/account_01 \
+"
+
+DUPLICITY_EXLUDES=" \
+   --exclude "$SRC/.*/*" \
+   --exclude  $SRC/snap \
+   --exclude  $SRC/projects \
+   --exclude  $SRC/workspace \
+   --exclude  $SRC/workspace-brush \
+   --exclude  $SRC/eclipse-workspace \
+   --exclude  $SRC/stephen.irons@gmail.com \
+   --exclude  $SRC/fontconfig \
+   --exclude  $SRC/Charts \
+   --exclude  $SRC/Downloads \
+   --exclude  $SRC/Examples \
+   --exclude  $SRC/Music \
+   --exclude  $SRC/Videos \
+"
 
 # Live mirror of photos, music and videos
 # Not quite a live mirror, as files are added to the mirror location, or modified. They are not deleted.
@@ -37,48 +58,44 @@ HOSTNAME=$(hostname)
 # to the music on lucrezia.
 
 
-DHOSTNAME="lucrezia.local"
-SRC="/home/stephen"
-DEST="sftp://stephen@$DHOSTNAME://DataVolume/shares/stephen/backup-$HOSTNAME"
-
-ping -W1 -c1 $DHOSTNAME
-if [ $? -eq 0 ]; then
+DHOSTNAME="usb_backup_red"
+DISK_ID="5c7d52c3-a496-487c-9cf6-d2ccd4f1ff36"
+DISK_LABEL="unknown"
+DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
+BACKUPDIR="/media/stephen/$DISK_ID/home/stephen/backup-$HOSTNAME"
+MYMOUNT=0
+if [ -e "$DISK_DEV" ]; then
+   if [ ! -d "$BACKUPDIR" ]; then
+       udisksctl mount -b "$DISK_DEV"
+       MYMOUNT=1
+   fi
+   
    echo "Backup -> $DHOSTNAME"
-   PASSPHRASE=$PASSPHRASE \
+   PASSPHRASE=$DUPLICITY_BACKUP_PASSPHRASE \
    duplicity \
    --full-if-older-than 3M \
    --progress \
-   \
-   --include  $SRC/.local/share/geary/account_01 \
-   --exclude "$SRC/.*/*" \
-   --exclude  $SRC/snap \
-   --exclude  $SRC/projects \
-   --exclude  $SRC/workspace \
-   --exclude  $SRC/workspace-brush \
-   --exclude  $SRC/eclipse-workspace \
-   --exclude  $SRC/stephen.irons@gmail.com \
-   --exclude  $SRC/fontconfig \
-   --exclude  $SRC/Charts \
-   --exclude  $SRC/Downloads \
-   --exclude  $SRC/Examples \
-   --exclude  $SRC/Music \
-   --exclude  $SRC/Videos \
-   \
+   $DUPLICITY_INCLUDES \
+   $DUPLICITY_EXCLUDES \
    "$SRC" \
-   "$DEST"
+   "file://$BACKUPDIR/$HOSTNAME"
 
    echo "Photos -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Pictures/ stephen@lucrezia.local:/shares/stephen/Shared\ Pictures
+   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
 
    echo "Videos -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Videos/ stephen@lucrezia.local:/shares/Public/Shared\ Videos
+   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
 
    echo "Music -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Music/ stephen@lucrezia.local:/shares/Public/Shared\ Music
+   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
+
+   if [ $MYMOUNT -eq 1 ]; then
+       udisksctl unmount -b $DISK_DEV
+   fi
 fi
 
 
-DHOSTNAME="usb drive home"
+DHOSTNAME="usb_backup_black"
 #DISK_ID="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
 #DISK_LABEL="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
 DISK_ID="C0AE6802AE67EF7A"
@@ -94,26 +111,12 @@ if [ -e "$DISK_DEV" ]; then
    fi
 
    echo "Backup -> $DHOSTNAME"
-   PASSPHRASE=$PASSPHRASE \
+   PASSPHRASE=$DUPLICITY_BACKUP_PASSPHRASE \
    duplicity \
    --full-if-older-than 3M \
    --progress \
-   \
-   --include  $SRC/.local/share/geary/account_01 \
-   --exclude "$SRC/.*/*" \
-   --exclude  $SRC/snap \
-   --exclude  $SRC/projects \
-   --exclude  $SRC/workspace \
-   --exclude  $SRC/workspace-brush \
-   --exclude  $SRC/eclipse-workspace \
-   --exclude  $SRC/stephen.irons@gmail.com \
-   --exclude  $SRC/fontconfig \
-   --exclude  $SRC/Charts \
-   --exclude  $SRC/Downloads \
-   --exclude  $SRC/Examples \
-   --exclude  $SRC/Music \
-   --exclude  $SRC/Videos \
-   \
+   $DUPLICITY_INCLUDES \
+   $DUPLICITY_EXCLUDES \
    "$SRC" \
    "file://$BACKUPDIR/$HOSTNAME"
 
@@ -132,53 +135,29 @@ if [ -e "$DISK_DEV" ]; then
 fi
 
 
-DHOSTNAME="usb drive work"
-DISK_ID="5c7d52c3-a496-487c-9cf6-d2ccd4f1ff36"
-DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
-BACKUPDIR="/media/stephen/$DISK_ID/home/stephen/backup-$HOSTNAME"
-MYMOUNT=0
-if [ -e "$DISK_DEV" ]; then
-   if [ ! -d "$BACKUPDIR" ]; then
-       udisksctl mount -b "$DISK_DEV"
-       MYMOUNT=1
-   fi
-   
+DHOSTNAME="lucrezia.local"
+DEST="pexpect+sftp://stephen@$DHOSTNAME://DataVolume/shares/stephen/backup-$HOSTNAME"
+
+ping -W1 -c1 $DHOSTNAME
+if [ $? -eq 0 ]; then
    echo "Backup -> $DHOSTNAME"
-   PASSPHRASE=$PASSPHRASE \
+   PASSPHRASE=$DUPLICITY_BACKUP_PASSPHRASE \
    duplicity \
    --full-if-older-than 3M \
    --progress \
-   \
-   --include  $SRC/.local/share/geary/account_01 \
-   --exclude "$SRC/.*/*" \
-   --exclude  $SRC/snap \
-   --exclude  $SRC/projects \
-   --exclude  $SRC/workspace \
-   --exclude  $SRC/workspace-brush \
-   --exclude  $SRC/eclipse-workspace \
-   --exclude  $SRC/stephen.irons@gmail.com \
-   --exclude  $SRC/fontconfig \
-   --exclude  $SRC/Charts \
-   --exclude  $SRC/Downloads \
-   --exclude  $SRC/Examples \
-   --exclude  $SRC/Music \
-   --exclude  $SRC/Videos \
-   \
+   $DUPLICITY_INCLUDES \
+   $DUPLICITY_EXCLUDES \
    "$SRC" \
-   "file://$BACKUPDIR/$HOSTNAME"
+   "$DEST"
 
    echo "Photos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
+   rsync -rltgoDszv -e ssh $SRC/Pictures/ stephen@lucrezia.local:/shares/stephen/Shared\ Pictures
 
    echo "Videos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
+   rsync -rltgoDszv -e ssh $SRC/Videos/ stephen@lucrezia.local:/shares/Public/Shared\ Videos
 
    echo "Music -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
-
-   if [ $MYMOUNT -eq 1 ]; then
-       udisksctl unmount -b $DISK_DEV
-   fi
+   rsync -rltgoDszv -e ssh $SRC/Music/ stephen@lucrezia.local:/shares/Public/Shared\ Music
 fi
 
 
