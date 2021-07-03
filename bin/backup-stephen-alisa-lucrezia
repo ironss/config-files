@@ -1,0 +1,223 @@
+#! /bin/sh
+
+HOSTNAME=$(hostname)
+. /home/stephen/.credentials.backup-encrypt   # PASSPHRASE
+
+# Incremental backup of projects and generated content, with a full backup every 3 months.
+#
+# Backup stuff from /home/stephen
+#    project/     are backed up   they generally do not have version control
+#    Dropbox/     are backed up   important stuff, Dropbox is fine for easy sharing, but not backup
+#    workspace/   not backed up   they are version controlled
+#    Downloads/   not backed up   just download them again
+#    Charts/      not backed up   charts for OpenCPN, downloaded from the internet
+#    Music/       not backed up   too large, can rip/download again
+#    Pictures/    not backed up   transferred to various online albums
+#    Videos/      not backed up   too large, transferred to various online albums
+#    Examples/    not backed up   junk
+#    snap/        not backed up   snap images, program files, download/install them again
+#
+# Backup destinations
+#   lucrezia (NAS)
+#   USB HDD at home
+#   USB HDD at work
+
+
+# Live mirror of photos, music and videos
+# Not quite a live mirror, as files are added to the mirror location, or modified. They are not deleted.
+# So moving files around does not get mirrored; the files get duplicated. Need to clean things up manually.
+#
+# Mirror locations
+#   lucrezia (NAS)
+#   USB HDD at home
+#   USB HDD at work
+
+
+# Music is synced to phone. Files are added, modified and deleted so that the phone music is identical
+# to the music on lucrezia.
+
+
+DHOSTNAME="lucrezia.local"
+SRC="/home/stephen"
+DEST="sftp://stephen@$DHOSTNAME://DataVolume/shares/stephen/backup-$HOSTNAME"
+
+ping -W1 -c1 $DHOSTNAME
+if [ $? -eq 0 ]; then
+   echo "Backup -> $DHOSTNAME"
+   PASSPHRASE=$PASSPHRASE \
+   duplicity \
+   --full-if-older-than 3M \
+   --progress \
+   \
+   --include  $SRC/.local/share/geary/account_01 \
+   --exclude "$SRC/.*/*" \
+   --exclude  $SRC/snap \
+   --exclude  $SRC/projects \
+   --exclude  $SRC/workspace \
+   --exclude  $SRC/workspace-brush \
+   --exclude  $SRC/eclipse-workspace \
+   --exclude  $SRC/stephen.irons@gmail.com \
+   --exclude  $SRC/fontconfig \
+   --exclude  $SRC/Charts \
+   --exclude  $SRC/Downloads \
+   --exclude  $SRC/Examples \
+   --exclude  $SRC/Music \
+   --exclude  $SRC/Videos \
+   \
+   "$SRC" \
+   "$DEST"
+
+   echo "Photos -> $DHOSTNAME"
+   rsync -rltgoDszv -e ssh $SRC/Pictures/ stephen@lucrezia.local:/shares/stephen/Shared\ Pictures
+
+   echo "Videos -> $DHOSTNAME"
+   rsync -rltgoDszv -e ssh $SRC/Videos/ stephen@lucrezia.local:/shares/Public/Shared\ Videos
+
+   echo "Music -> $DHOSTNAME"
+   rsync -rltgoDszv -e ssh $SRC/Music/ stephen@lucrezia.local:/shares/Public/Shared\ Music
+fi
+
+
+DHOSTNAME="usb drive home"
+#DISK_ID="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
+#DISK_LABEL="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
+DISK_ID="C0AE6802AE67EF7A"
+DISK_LABEL="ironss_backup_home"
+
+DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
+BACKUPDIR="/media/stephen/$DISK_LABEL/home/stephen/backup-$HOSTNAME"
+MYMOUNT=0
+if [ -e "$DISK_DEV" ]; then
+   if [ ! -d "$BACKUPDIR" ]; then
+       udisksctl mount -b "$DISK_DEV"
+       MYMOUNT=1
+   fi
+
+   echo "Backup -> $DHOSTNAME"
+   PASSPHRASE=$PASSPHRASE \
+   duplicity \
+   --full-if-older-than 3M \
+   --progress \
+   \
+   --include  $SRC/.local/share/geary/account_01 \
+   --exclude "$SRC/.*/*" \
+   --exclude  $SRC/snap \
+   --exclude  $SRC/projects \
+   --exclude  $SRC/workspace \
+   --exclude  $SRC/workspace-brush \
+   --exclude  $SRC/eclipse-workspace \
+   --exclude  $SRC/stephen.irons@gmail.com \
+   --exclude  $SRC/fontconfig \
+   --exclude  $SRC/Charts \
+   --exclude  $SRC/Downloads \
+   --exclude  $SRC/Examples \
+   --exclude  $SRC/Music \
+   --exclude  $SRC/Videos \
+   \
+   "$SRC" \
+   "file://$BACKUPDIR/$HOSTNAME"
+
+   echo "Photos -> $DHOSTNAME"
+   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
+
+   echo "Videos -> $DHOSTNAME"
+   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
+
+   echo "Music -> $HOSTNAME"
+   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
+
+   if [ $MYMOUNT -eq 1 ]; then
+       udisksctl unmount -b $DISK_DEV
+   fi
+fi
+
+
+DHOSTNAME="usb drive work"
+DISK_ID="5c7d52c3-a496-487c-9cf6-d2ccd4f1ff36"
+DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
+BACKUPDIR="/media/stephen/$DISK_ID/home/stephen/backup-$HOSTNAME"
+MYMOUNT=0
+if [ -e "$DISK_DEV" ]; then
+   if [ ! -d "$BACKUPDIR" ]; then
+       udisksctl mount -b "$DISK_DEV"
+       MYMOUNT=1
+   fi
+   
+   echo "Backup -> $DHOSTNAME"
+   PASSPHRASE=$PASSPHRASE \
+   duplicity \
+   --full-if-older-than 3M \
+   --progress \
+   \
+   --include  $SRC/.local/share/geary/account_01 \
+   --exclude "$SRC/.*/*" \
+   --exclude  $SRC/snap \
+   --exclude  $SRC/projects \
+   --exclude  $SRC/workspace \
+   --exclude  $SRC/workspace-brush \
+   --exclude  $SRC/eclipse-workspace \
+   --exclude  $SRC/stephen.irons@gmail.com \
+   --exclude  $SRC/fontconfig \
+   --exclude  $SRC/Charts \
+   --exclude  $SRC/Downloads \
+   --exclude  $SRC/Examples \
+   --exclude  $SRC/Music \
+   --exclude  $SRC/Videos \
+   \
+   "$SRC" \
+   "file://$BACKUPDIR/$HOSTNAME"
+
+   echo "Photos -> $DHOSTNAME"
+   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
+
+   echo "Videos -> $DHOSTNAME"
+   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
+
+   echo "Music -> $DHOSTNAME"
+   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
+
+   if [ $MYMOUNT -eq 1 ]; then
+       udisksctl unmount -b $DISK_DEV
+   fi
+fi
+
+
+DHOSTNAME="phone"
+DISK_ID="FFF3-E88C"
+DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
+BACKUPDIR="/media/stephen/$DISK_ID"
+MYMOUNT=0
+if [ -e "$DISK_DEV" ]; then
+   if [ ! -d "$BACKUPDIR" ]; then
+       udisksctl mount -b "$DISK_DEV"
+       MYMOUNT=1
+   fi
+   
+   echo "Music -> $DHOSTNAME"
+   rsync -aszvut --modify-window=1 $SRC/Music/ "$BACKUPDIR/Music"
+
+   if [ $MYMOUNT -eq 1 ]; then
+       udisksctl unmount -b $DISK_DEV
+   fi
+fi
+
+
+DHOSTNAME="nokia"
+DISK_ID="usb-Generic_SDCard_DISK_357306081923294-0:0"
+DISK_DEV="/dev/disk/by-id/$DISK_ID"
+BACKUPDIR="/media/stephen/disk"
+MYMOUNT=0
+if [ -e "$DISK_DEV" ]; then
+   if [ ! -d "$BACKUPDIR" ]; then
+       udisksctl mount -b "$DISK_DEV"
+       MYMOUNT=1
+   fi
+   
+   echo "Music -> $DHOSTNAME"
+   rsync -aszvut --modify-window=1 $SRC/Music/ "$BACKUPDIR/Music files"
+
+   if [ $MYMOUNT -eq 1 ]; then
+       udisksctl unmount -b $DISK_DEV
+   fi
+fi
+
