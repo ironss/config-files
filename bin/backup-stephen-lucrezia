@@ -106,8 +106,10 @@ fi
 DHOSTNAME="usb_backup_black"
 #DISK_ID="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
 #DISK_LABEL="7af9d93c-11fe-4651-ab23-4ff24ecb7c91"
-DISK_ID="C0AE6802AE67EF7A"
-DISK_LABEL="ironss_backup_home"
+#DISK_ID="C0AE6802AE67EF7A"
+#DISK_LABEL="ironss_backup_home"
+DISK_ID="81794fd6-82d6-4c93-a2fe-f3882cde54dd"
+DISK_LABEL="81794fd6-82d6-4c93-a2fe-f3882cde54dd"
 
 DISK_DEV="/dev/disk/by-uuid/$DISK_ID"
 BACKUPDIR="/media/stephen/$DISK_LABEL/home/stephen/backup-$HOSTNAME"
