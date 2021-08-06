@@ -4,6 +4,16 @@ ZIM_PAGE="Public"
 EXPORT_DIR=$HOME/zim-export/$ZIM_PAGE
 EXPORT_PAGE="$EXPORT_DIR/$ZIM_PAGE.html"
 
+SUBDOMAIN=public
+DOMAIN=irons.nz
+FQDN=$SUBDOMAIN.$DOMAIN
+IPNS_KEY_NAME=$FQDN
+IPNS_ID=$(ipfs key list -l | grep $IPNS_KEY_NAME | grep -o '^[^ ]\+')
+
+
+# Read keys and passwords
+source $HOME/.secrets
+
 
 echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
     rm $EXPORT_DIR -r
@@ -13,16 +23,23 @@ echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE...done
 
 
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
-    IPFS_HASH=$(ipfs add -Q -r $EXPORT_DIR)
-    echo /ipfs/$IPFS_HASH
+    IPFS_ID=$(ipfs add -Q -r $EXPORT_DIR)
+    #ipfs name publish -Q --lifetime 48h --ttl 300s --key=$IPNS_KEY_NAME $IPFS_ID
 
-    IPNS_HASH=$(ipfs name publish -Q --lifetime 48h --ttl 300s --key=$ZIM_PAGE $IPFS_HASH)
-    echo /ipns/$IPNS_HASH
+    echo /ipfs/$IPFS_ID
+    echo /ipns/$IPNS_ID
+    echo /ipns/$IPNS_KEY_NAME
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...done
 
 
-echo $0: pinning "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
-    ipfs pin remote rm --service=pinata --name=$ZIM_PAGE
-    ipfs pin remote add --service=pinata --name=$ZIM_PAGE $IPFS_HASH
-echo $0: pinning "$ZIM_NOTEBOOK":"$ZIM_PAGE"...done
+echo $0: pinning $IPNS_KEY_NAME $IPFS_ID...
+    ipfs pin remote rm --service=pinata --name=$IPNS_KEY_NAME
+    ipfs pin remote add --service=pinata --name=$IPNS_KEY_NAME $IPFS_ID
+echo $0: pinning $IPNS_KEY_NAME $IPFS_ID...done
+
+
+echo $0: updating DNS: $FQDN: $IPFS_ID...
+    curl -X PUT "https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.$SUBDOMAIN/TXT" -H "Authorization: Apikey $GANDI_APIKEY" -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"\\\"dnslink=/ipfs/$IPFS_ID\\\"\"]}"
+    echo
+echo $0: updating DNS: $FQDN: $IPFS_ID...done
 
