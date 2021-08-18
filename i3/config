@@ -220,14 +220,12 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
         font pango:DejaVu Sans Mono 10
-        #tray_output DisplayPort-2
 }
 
-#exec --no-startup-id /usr/local/bin/pa-applet   # Does not compile under 18.04
-#exec --no-startup-id /usr/bin/gnome-flashback   # Makes the indicators in the tray disappear
-exec --no-startup-id /usr/bin/nm-applet
-#exec --no-startup-id /usr/lib/gsd-xsettings
-#exec_always --no-startup-id gnome-power-manager
+
+exec --no-startup-id /usr/bin/gnome-flashback
+exec --no-startup-id /usr/local/bin/volctl
+
 
 # Assign application windows to various desktops
 # To find window details, run 'xprop' then click in the window
