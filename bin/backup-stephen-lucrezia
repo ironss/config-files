@@ -40,6 +40,7 @@ DUPLICITY_EXCLUDES=" \
    --exclude  $SRC/workspace \
    --exclude  $SRC/workspace-brush \
    --exclude  $SRC/brush-workspace \
+   --exclude  $SRC/workspace-iotec \
    --exclude  $SRC/eclipse \
    --exclude  $SRC/eclipse-workspace \
    --exclude  $SRC/stephen.irons@gmail.com \
@@ -49,9 +50,34 @@ DUPLICITY_EXCLUDES=" \
    --exclude  $SRC/Examples \
    --exclude  $SRC/Music \
    --exclude  $SRC/Videos \
-   --exclude  $SRC/zim-exports \
+   --exclude  $SRC/vnaJ.3.4
+   --exclude  $SRC/zim-export \
 "
 
+
+RSYNC_PARAMS1="-rltgoDszv"
+RSYNC_PARAMS_PHONE1="-aszvut"
+
+RSYNC_PARAMS2=" \
+   --recursive \
+   --links \
+   --times \
+   --group \
+   --owner \
+   --devices \
+   --specials \
+   --protect-args \
+   --compress \
+   --verbose \
+" 
+RSYNC_PARAMS=$RSYNC_PARAMS1
+
+
+RSYNC_PARAMS_PHONE2=" \
+   --update \
+   --modify-window=2 \
+"
+RSYNC_PARAMS_PHONE=$RSYNC_PARAMS_PHONE2
 
 # Live mirror of photos, music and videos
 # Not quite a live mirror, as files are added to the mirror location, or modified. They are not deleted.
@@ -89,13 +115,13 @@ if [ -e "$DISK_DEV" ]; then
    "file://$BACKUPDIR/$HOSTNAME"
 
    echo "Photos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
+   rsync $RSYNC_PARAMS $SRC/Pictures/ "$BACKUPDIR/Pictures"
 
    echo "Videos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
+   rsync $RSYNC_PARAMS $SRC/Videos/ "$BACKUPDIR/Videos"
 
    echo "Music -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
+   rsync $RSYNC_PARAMS $SRC/Music/ "$BACKUPDIR/Music"
 
    if [ $MYMOUNT -eq 1 ]; then
        udisksctl unmount -b $DISK_DEV
@@ -131,13 +157,13 @@ if [ -e "$DISK_DEV" ]; then
    "file://$BACKUPDIR/$HOSTNAME"
 
    echo "Photos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Pictures/ "$BACKUPDIR/Pictures"
+   rsync $RSYNC_PARAMS $SRC/Pictures/ "$BACKUPDIR/Pictures"
 
    echo "Videos -> $DHOSTNAME"
-   rsync -rltgoDszv $SRC/Videos/ "$BACKUPDIR/Videos"
+   rsync $RSYNC_PARAMS $SRC/Videos/ "$BACKUPDIR/Videos"
 
-   echo "Music -> $HOSTNAME"
-   rsync -rltgoDszv $SRC/Music/ "$BACKUPDIR/Music"
+   echo "Music -> $DHOSTNAME"
+   rsync $RSYNC_PARAMS $SRC/Music/ "$BACKUPDIR/Music"
 
    if [ $MYMOUNT -eq 1 ]; then
        udisksctl unmount -b $DISK_DEV
@@ -161,13 +187,39 @@ if [ $? -eq 0 ]; then
    "$DEST"
 
    echo "Photos -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Pictures/ stephen@lucrezia.local:/shares/stephen/Shared\ Pictures
+   rsync $RSYNC_PARAMS -e ssh $SRC/Pictures/ stephen@$DHOSTNAME:/shares/stephen/Pictures
 
    echo "Videos -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Videos/ stephen@lucrezia.local:/shares/Public/Shared\ Videos
+   rsync $RSYNC_PARAMS -e ssh $SRC/Videos/ stephen@$DHOSTNAME:/shares/stephen/Videos
 
    echo "Music -> $DHOSTNAME"
-   rsync -rltgoDszv -e ssh $SRC/Music/ stephen@lucrezia.local:/shares/Public/Shared\ Music
+   rsync $RSYNC_PARAMS -e ssh $SRC/Music/ stephen@$DHOSTNAME:/shares/stephen/Music
+fi
+
+
+DHOSTNAME="elektra.local"
+DEST="sftp://stephen@$DHOSTNAME:/backup/backup-$HOSTNAME"
+
+ping -W1 -c1 $DHOSTNAME
+if [ $? -eq 0 ]; then
+   echo "Backup -> $DHOSTNAME"
+   PASSPHRASE=$DUPLICITY_BACKUP_PASSPHRASE \
+   duplicity \
+   $DUPLICITY_PARAMS \
+   $DUPLICITY_INCLUDES \
+   $DUPLICITY_EXCLUDES \
+   --exclude  "$SRC/.*/*" \
+   "$SRC" \
+   "$DEST"
+
+   echo "Photos -> $DHOSTNAME"
+   rsync $RSYNC_PARAMS -e ssh $SRC/Pictures/ stephen@$DHOSTNAME:/home/stephen/Pictures
+
+   echo "Videos -> $DHOSTNAME"
+   rsync $RSYNC_PARAMS -e ssh $SRC/Videos/ stephen@$DHOSTNAME:/home/stephen/Videos
+
+#   echo "Music -> $DHOSTNAME"
+#   rsync $RSYNC_PARAMS -e ssh $SRC/Music/ stephen@$DHOSTNAME:/shares/Public/Shared\ Music
 fi
 
 
@@ -183,7 +235,7 @@ if [ -e "$DISK_DEV" ]; then
    fi
    
    echo "Music -> $DHOSTNAME"
-   rsync -aszvut --modify-window=1 $SRC/Music/ "$BACKUPDIR/Music"
+   rsync $RSYNC_PARAMS $RSYNC_PARAMS_PHONE $SRC/Music/ "$BACKUPDIR/Music"
 
    if [ $MYMOUNT -eq 1 ]; then
        udisksctl unmount -b $DISK_DEV
@@ -203,7 +255,7 @@ if [ -e "$DISK_DEV" ]; then
    fi
    
    echo "Music -> $DHOSTNAME"
-   rsync -aszvut --modify-window=1 $SRC/Music/ "$BACKUPDIR/Music files"
+   rsync $RSYNC_PARAMS $RSYNC_PARAMS_PHONE $SRC/Music/ "$BACKUPDIR/Music files"
 
    if [ $MYMOUNT -eq 1 ]; then
        udisksctl unmount -b $DISK_DEV

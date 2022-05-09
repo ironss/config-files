@@ -1,5 +1,4 @@
 #! /bin/sh
 
-/opt/eclipse-embedcpp-2020-12-R-linux-gtk-x86_64/eclipse/eclipse
-#/home/stephen/Downloads/eclipse-embedcpp-2020-12-R-linux-gtk-x86_64/eclipse/eclipse
+/opt/eclipse-embedcpp-2022-03-R-linux-gtk-x86_64/eclipse/eclipse
 

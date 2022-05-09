@@ -20,6 +20,7 @@ def download_video(video_url):
 def extract_audio(video_filename, audio_filename, overwrite=False):
     p1 = subprocess.Popen(['ffmpeg', '-y', '-i', video_filename, '-vn', '-acodec', 'copy', audio_filename], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     output = p1.communicate()[0]
+    print(output)
 
 def calculate_bpm(filename):
     p1 = subprocess.Popen(['ffmpeg', '-y', '-i', filename, '-f', 'f32le', '-ar', '44100', '-ac', '1', '-'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)

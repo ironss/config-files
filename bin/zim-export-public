@@ -15,31 +15,42 @@ IPNS_ID=$(ipfs key list -l | grep $IPNS_KEY_NAME | grep -o '^[^ ]\+')
 source $HOME/.secrets
 
 
-echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
+echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
     rm $EXPORT_DIR -r
     zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
     cp $EXPORT_DIR/$ZIM_PAGE.html $EXPORT_DIR/index.html
-echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE...done
+echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE ...done
 
-
-echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...
+echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
     IPFS_ID=$(ipfs add -Q -r $EXPORT_DIR)
-    #ipfs name publish -Q --lifetime 48h --ttl 300s --key=$IPNS_KEY_NAME $IPFS_ID
+    IPFS_PATH=/ipfs/$IPFS_ID
+    echo New: $IPFS_PATH
+echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...done
+    
+    IPFS_OLD_PATH=$(ipfs name resolve $IPNS_KEY_NAME)
+    echo $IPNS_KEY_NAME: was: $IPFS_OLD_PATH
 
-    echo /ipfs/$IPFS_ID
-    echo /ipns/$IPNS_ID
-    echo /ipns/$IPNS_KEY_NAME
-echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE"...done
+echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...
+    ipfs pin remote rm --service=pinata               --name=$IPNS_KEY_NAME --force
+    ipfs pin remote add --service=pinata --background --name=$IPNS_KEY_NAME $IPFS_PATH
+echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...done
 
+#echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to elektra.local ...
+#    ssh stephen@elektra.local ipfs pin rm $IPFS_OLD_PATH
+#    ssh stephen@elektra.local ipfs pin add /ipfs/$IPFS_ID
+#echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to elektra.local ...done
 
-echo $0: pinning $IPNS_KEY_NAME $IPFS_ID...
-    ipfs pin remote rm --service=pinata --name=$IPNS_KEY_NAME
-    ipfs pin remote add --service=pinata --name=$IPNS_KEY_NAME $IPFS_ID
-echo $0: pinning $IPNS_KEY_NAME $IPFS_ID...done
+echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to elektra via constanza port 22222 ...
+    ssh stephen@constanza.irons.nz -p 22222 -o GatewayPorts=yes ipfs pin rm $IPFS_OLD_PATH
+    ssh stephen@constanza.irons.nz -p 22222 -o GatewayPorts=yes ipfs pin add /ipfs/$IPFS_ID
+echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to elektra.local ...done
 
-
-echo $0: updating DNS: $FQDN: $IPFS_ID...
-    curl -X PUT "https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.$SUBDOMAIN/TXT" -H "Authorization: Apikey $GANDI_APIKEY" -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"\\\"dnslink=/ipfs/$IPFS_ID\\\"\"]}"
+echo $0: updating DNS: $FQDN to $IPFS_PATH ...
+    curl -X PUT "https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.$SUBDOMAIN/TXT" -H "Authorization: Apikey $GANDI_APIKEY" -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"\\\"dnslink=$IPFS_PATH\\\"\"]}"
     echo
-echo $0: updating DNS: $FQDN: $IPFS_ID...done
+echo $0: updating DNS: $FQDN to $IPFS_PATH ...done
+
+echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_PATH ...
+    ipfs name publish -Q --lifetime 48h --ttl 300s --key=$IPNS_KEY_NAME $IPFS_PATH
+echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_PATH ...done
 
