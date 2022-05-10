@@ -1,0 +1,12 @@
+CTYPE=rsa
+EMAIL=${1:-$USERNAME@$HOSTNAME}
+ID=${EMAIL%@*}+$HOSTNAME@${EMAIL##*@}
+ID_FILENAME=~/.ssh/id_$CTYPE-$ID
+
+echo $0: generating $ID_FILENAME: $CTYPE key for $EMAIL on $HOSTNAME...
+
+ssh-keygen -f $ID_FILENAME -C $ID -t $CTYPE
+
+
+echo $0: generating $ID_FILENAME: $CTYPE key for $EMAIL on $HOSTNAME...done
+

@@ -1,0 +1,183 @@
+Utilities
+---------
+
+* Firefox                   repo
+    * and plugins
+* youtube-dl                pip install
+
+* Syncthing                 syncthing PPA
+    * then hook it up to 
+      existing devices
+* KeePassXC                 keepassxc PPA
+    * and Firefox plugins
+
+* gnome-flashback-session   repo
+* i3                        repo
+* i3-gnome-flashback        https://github.com/deuill/i3-gnome-flashback
+* dconf editor              repo
+* ipfs                      snap
+* ipfs-desktop              snap
+* Personal config files     https://github.com/ironss/config-files
+
+* Geary                     repo
+* Gnome calendar            repo
+* Gnome contacts            repo
+
+
+Communication tools
+-------------------
+* signal-desktop            snap
+* skype
+* pidgin
+* SIP phone
+    * Not that there are 
+      any that are usable
+
+
+Media tools
+-----------
+* GIMP                      repo
+* shotwell                  repo
+* digikam                   repo
+    * easier to see exactly 
+      which version of 
+      title/description/
+      comment/etc you are 
+      editing
+* Still looking for a 
+  simple tool to add text,
+  highlights, callouts, 
+  etc to an image
+* draw.io                   snap
+    * Now called 
+      diagrams.net
+    * It is sad that the 
+      best stick-and-box 
+      drawing tool is an 
+      offline version of 
+      an online tool
+
+* Audacity                  snap
+* Ardour                    UbuntuStudio ardour backport PPA
+* Musescore                 snap
+* Shotcut                   snap
+
+
+Other
+-----
+* OpenCPN                   opencpn PPA
+* GPredict                  repo
+
+
+Development
+-----------
+* Eclipse Embedded C/C++    https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2021-06/R/eclipse-embedcpp-2021-06-R-linux-gtk-x86_64.tar.gz
+    * and plugins
+* meld                      repo
+* sqlite3                   repo
+* sqlitebrowser             repo
+
+
+Compilers, etc
+--------------
+
+* gcc                       repo
+* clang                     repo
+* distcc                    repo
+* icecream                  repo
+* ccache                    repo
+
+* gcc-arm-none-eabi         https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+* gcc-msp430                http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/9_3_1_1/export/msp430-gcc-9.3.1.11_linux64.tar.bz2
+
+* python3                   repo
+* python3-pip               repo
+* python3-venv              repo
+* python3-serial            repo
+* then each project will 
+  have its own set of 
+  pip installs
+
+* lua 5.3                   repo
+    * and numerous 
+      libraries
+
+* numerous version control systems
+
+
+Version control
+---------------
+
+Unfortunately, I am involved in projects that use all of these...
+
+* git                       repo
+* bzr or brz                repo
+* mercurial                 repo
+* Tortoise HG               repo
+* subversion                repo
+* fossil                    repo
+
+
+Eclipse plugins
+---------------
+
+* git integration
+* svn integration
+* bzr integration (dead?)
+* pydev
+* anyedit tools
+* liclipse
+* plantuml
+
+
+Firefox plugins
+---------------
+
+* uBlock Origin
+* Privacy Badger
+* ClearURLs
+* KeePassXC-Browser
+* IPFS Companion
+* 2read
+
+
+Python3 pip installs
+--------------------
+* Standard venv pip installs
+    * pytest
+    * coverage
+    * pytest-cov
+    * pylint
+    * unittest-xml-reporting
+
+* Other venv pip installs
+    * pyserial
+    * pyparsing
+    * ffmpeg-python
+    * pytz (if python < 3.9)
+        * if python >= 3.9, use standard zoneinfo module
+    * matplotlib
+    * peewee
+    * requests
+    * skyfield
+        * skyfield-data
+    * natsort
+
+
+Gnome configuration
+-------------------
+* Date as YYYY-mm-dd
+* Week starts on Monday rather than Sunday
+
+
+Storing secrets
+---------------
+* in the version control repository
+* encrypted in the version control repository (eg. git-crypt)
+* in source code not in version control
+* in a config file not in version control
+* in environment variables
+* in a key vault
+    * eg. Hashicorp vault
+
+

@@ -1,0 +1,37 @@
+Host *
+  ControlMaster  auto
+  #ControlPath    ~/.ssh/persist/%r@%h:%p
+  ControlPath    ~/.ssh/persist/%r@%n:%p
+  ControlPersist 1h
+
+# Enable X11 forwarding on .local machines
+Host *.local
+  ForwardX11 yes
+
+
+# BBB and BBGW net-over-USB connections
+# Ignore the host key, because it changes when a different device is connected
+Host 192.168.6.*,192.168.7.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
+
+# Github uses the ssh key to identify the github user. If you have two github accounts
+# you need to have two separate ssh keys
+
+Host github.com-private
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa-ironss+%l@users.noreply.github.com
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  IdentitiesOnly yes
+
+Host github.com-iotec
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa-stephen.irons+%l@iotec.space
+  PreferredAuthentications publickey
+  PasswordAuthentication no
+  IdentitiesOnly yes
+

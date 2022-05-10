@@ -1,0 +1,9 @@
+[NotebookList]
+Default=
+1=~/workspace/technical-notes
+
+[Notebook 1]
+uri=~/workspace/technical-notes
+name=Technical Notes
+interwiki=None
+icon=None

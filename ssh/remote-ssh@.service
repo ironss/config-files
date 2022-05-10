@@ -1,0 +1,18 @@
+[Unit]
+Description=Remote SSH service
+Documentation=TBD
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+
+User=muninmon
+Group=nogroup
+WorkingDirectory=/var/lib/muninmon
+ExecStart=/usr/bin/ssh -NT -R 22222:localhost:22 munin@%i
+
+[Install]
+WantedBy=multi-user.target
+
