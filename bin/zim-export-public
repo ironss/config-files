@@ -1,4 +1,4 @@
-ZIM_NOTEBOOK=$HOME/workspace/technical-notes
+ZIM_NOTEBOOK=$HOME/Sync/technical-notes
 ZIM_PAGE="Public"
 
 EXPORT_DIR=$HOME/zim-export/$ZIM_PAGE
