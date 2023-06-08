@@ -3,49 +3,13 @@
 # Stephen Irons
 # See http://i3wm.org/docs/userguide.html
 
-# Display connections
-#
-# On different machines, or different kernel/OS/xrandr versions, the monitor outputs have different names
-#   * eDP, eDP-1, eDP1, LVDS-0                      for a laptop display
-#   * HDMI-1, HDMI1, VGA-1, DVI-I-1, DisplayPort-2  for an external display, depending on which
-#     connector it is plugged into
-#
-# It seems that the best option for a single machine+OS combination is
-# * use xrandr to configure the external monitor as 'primary'; then the name for the external monitor
-#   does not change if it plugged into a different port
-# * use the laptop display name 'eDP' for the other monitor
-#
-# Note that this is not a fully general solution, as a different machine+OS combination might have
-# a different name for the laptop monitor. I don't see a way around this unless we can
-# * 
-
-# alisa/violetta (HP Envy 15) running Ubuntu 18.04
-set $display_L HDMI-1
-set $display_R eDP-1
-
-# alisa/violetta (HP Envy 15) running Ubuntu 17.10
-#set $display_L eDP1
-#set $display_R HDMI1
-
-# lucia (Dell XPS M1210)
-#set $display_L LVDS-0
-#set $display_R VGA-0
-
-# leonora (Asus)
-#set $display_L VGA-1
-#set $display_R LVDS-1
-
-# violetta (Dell Inspiron 6400)
-#set $display_L VGA-1
-#set $display_R LVDS-1
-
-# ws3184
-#set $display_L DVI-I-1
-#set $display_R VGA-1
+# Display configuration
+# Read display configuration from a host-specific configuration file
+# (available since i3 v4.20
+include ~/.config/i3/`hostname`.conf
 
 
 set $mod Mod4
-
 
 # --- Application shortcut keys ----------------------------------------------
 
