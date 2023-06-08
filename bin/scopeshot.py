@@ -126,11 +126,18 @@ class Instrument:
         if cmt_text:
             cmt_font = PIL.ImageFont.truetype(kargs['comment_font_fn'], kargs['comment_font_size'])
             cmt_bbox = cmt_font.getbbox(cmt_text)
+
             cmt_img = PIL.Image.new('L', (cmt_bbox[2], cmt_bbox[3]), color=255)  # White background
             cmt_draw = PIL.ImageDraw.Draw(cmt_img)
-            cmt_draw.text((0, 0), cmt_text, 0, cmt_font)                        # Black text, using inverted text as a mask
+            cmt_draw.text((0, 0), cmt_text, 0, cmt_font)                         # Black text
             cmt_img = cmt_img.rotate(90, expand=1)
-            img.paste(cmt_img, (img.size[0]-cmt_img.size[0]-2, img.size[1]-cmt_img.size[1]-2), PIL.ImageOps.invert(cmt_img))
+
+            msk_img = PIL.Image.new('L', (cmt_bbox[2], cmt_bbox[3]), color=63)   # Semi transparent background
+            msk_draw = PIL.ImageDraw.Draw(msk_img)
+            msk_draw.text((0, 0), cmt_text, 255, cmt_font)                       # Opaque text, using inverted text as a mask
+            msk_img = msk_img.rotate(90, expand=1)
+
+            img.paste(cmt_img, (img.size[0]-cmt_img.size[0]-2, img.size[1]-cmt_img.size[1]-2), msk_img)
         
         # Write Exif data
         img_exif = img.getexif()
