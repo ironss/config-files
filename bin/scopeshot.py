@@ -9,11 +9,6 @@
 #   oscilloscope details.
 # * Updates a symlink to the most-recent screenshot
 
-# Parameters
-# * scope name
-# * addr 
-
-import argparse
 import io
 import datetime
 import os
@@ -26,22 +21,9 @@ import PIL.ImageDraw
 import PIL.ImageFont
 import PIL.ExifTags
 
+# Create a map to look up Exif ID from tag-name
 _exif_id = { v: k for k, v in PIL.ExifTags.TAGS.items() }
-#for k in sorted(_exif_id):
-#    print(k)
 
-
-#scope_name = "Stephen's Rigol"
-scope_name = "Aidan's Keysight"
-#scope_name = "RIVIR OWON"
-
-scopes = {
-    "RIVIR OWON"      : (( '192.168.1.72' , 3000 ), ( 'OWON'    , 'TAO3104'  ), '2253142'        ),
-    "Aidan's Keysight": (( '192.168.1.112', 5025 ), ( 'Keysight', 'DSOX1201A'), ''             ),
-    "Stephen's Rigol" : (( '192.168.1.21' , 5555 ), ( 'Rigol'   , 'MSO1104Z' ), 'DS1ZC194302050' ),
-}
-
-scope_addr = scopes[scope_name][0]
 
 class Instrument:
     _scpi_protocols = {
@@ -198,6 +180,43 @@ class Instrument:
             return data
 
 
-scope = Instrument(scope_name, scope_addr)
-screenshot = scope.screenshot()
+
+if __name__ == '__main__':
+    import argparse
+    import json
+
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('device', nargs='*', default=["Stephen's Rigol"], help='Instrument name, IP:port or VISA address')
+
+    args = argparser.parse_args()
+
+    # TODO: Read from a (JSON?) configuration file
+    scopes = {
+        "RIVIR OWON"      : (( '192.168.1.72' , 3000 ), ( 'OWON'    , 'TAO3104'  ), '2253142'        ),
+        "Aidan's Keysight": (( '192.168.1.112', 5025 ), ( 'Keysight', 'DSOX1201A'), ''             ),
+        "Stephen's Rigol" : (( '192.168.1.21' , 5555 ), ( 'Rigol'   , 'MSO1104Z' ), 'DS1ZC194302050' ),
+    }
+
+    for dev in args.device:
+        # Look up device-id in the name table
+        try:
+            scope_addr = scopes[dev][0]
+            scope_name = dev
+        except KeyError:
+            scope_addr = None
+            scope_name = None
+        
+        # TODO: See if it looks like an IP address
+        if scope_addr is None:
+            continue      
+
+        # TODO: See if it looks like a VISA address
+        
+        if scope_name is None:
+            scope_name = '{}-{}'.format(*scope_addr)
+        
+        print("screenshot: {} ({})".format(scope_name, scope_addr))
+        scope = Instrument(scope_name, scope_addr)
+        screenshot = scope.screenshot()
+        print()
 
