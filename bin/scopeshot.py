@@ -11,7 +11,6 @@
 
 import io
 import datetime
-import os
 import socket
 import zoneinfo
 
@@ -104,12 +103,7 @@ class Instrument:
             'comment_fmt': 'scopeshot {dt:%Y-%m-%d %H:%M:%S%z} {mfr_abbr} {model} {serial}',
             'comment_font_fn': "courbd.ttf",
             'comment_font_size': 12,
-            'file_fmt': '{file_dir}/scopeshot-{dt:%Y-%m-%d_%H.%M.%S%z}-{mfr_abbr}-{model}-{serial}.{file_type}',
-            'file_type': 'png',
-            'file_dir': os.path.join(os.environ['HOME'], 'Pictures'),
-            'file_resolution': 120,
             'exif_comment_fmt': 'scopeshot,{dt:%Y-%m-%d_%H.%M.%S%z},{mfr},{model},{serial}',
-            'link_fmt': "{file_dir}/scopeshot.{file_type}",
             'copyright': '(c) RIVIR',
         }
 
@@ -137,9 +131,7 @@ class Instrument:
             cmt_img = cmt_img.rotate(90, expand=1)
             img.paste(cmt_img, (img.size[0]-cmt_img.size[0]-2, img.size[1]-cmt_img.size[1]-2), PIL.ImageOps.invert(cmt_img))
         
-        ofn = kargs['file_fmt'].format(file_dir=kargs['file_dir'], dt=dt.astimezone(), mfr_abbr=self.manufacturer_abbr, model=self.model, serial=self.serial, file_type=kargs['file_type'])
-
-        print('writing: {}'.format(ofn))
+        # Write Exif data
         img_exif = img.getexif()
         exif_cmt = kargs['exif_comment_fmt'].format(dt=dt.astimezone(), mfr=self.manufacturer, model=self.model, serial=self.serial)
         if exif_cmt:
@@ -149,15 +141,10 @@ class Instrument:
         img_exif[_exif_id['Model']] = self.model
         img_exif[_exif_id['CameraSerialNumber']] = self.serial
         img_exif[_exif_id['Copyright']] = kargs['copyright']
-        img_exif[_exif_id['XResolution']] = kargs['file_resolution']
-        img_exif[_exif_id['YResolution']] = kargs['file_resolution']
-        img.save(ofn, dpi=(kargs['file_resolution'], kargs['file_resolution']), exif=img_exif)
+        #img_exif[_exif_id['XResolution']] = kargs['file_resolution']
+        #img_exif[_exif_id['YResolution']] = kargs['file_resolution']
 
-        sfn = kargs['link_fmt'].format(file_dir=kargs['file_dir'], dt=dt, manufacturer=self.manufacturer, model=self.model, serial=self.serial, file_type=kargs['file_type'])
-        if sfn:
-            os.symlink(ofn, sfn + '.tmp')
-            os.rename(sfn + '.tmp', sfn)
-
+        return img
         
     def _query(self, request, timeout=0.1):
         if isinstance(self.addr, tuple):    
@@ -181,19 +168,32 @@ class Instrument:
 
 if __name__ == '__main__':
     import argparse
+    import datetime
     import json
+    import os
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument('device', nargs='*', default=["Stephen's Rigol"], help='Instrument name, IP:port or VISA address')
 
     args = argparser.parse_args()
+    xargs = {
+        # TODO: Some or all of these should be command-line parameters
+        'file_fmt': '{file_dir}/scopeshot-{dt:%Y-%m-%d_%H.%M.%S%z}-{mfr_abbr}-{model}-{serial}.{file_type}',
+        'file_type': 'png',
+        'file_dir': os.path.join(os.environ['HOME'], 'Pictures'),
+        'file_resolution': 120,
+        'link_fmt': '{file_dir}/scopeshot.{file_type}',
+    }
 
-    # TODO: Read from a (JSON?) configuration file
+
+    # TODO: Read scope-names and addresses from a (JSON?) configuration file
     scopes = {
         "RIVIR OWON"      : (( '192.168.1.72' , 3000 ), ( 'OWON'    , 'TAO3104'  ), '2253142'        ),
         "Aidan's Keysight": (( '192.168.1.112', 5025 ), ( 'Keysight', 'DSOX1201A'), ''             ),
         "Stephen's Rigol" : (( '192.168.1.21' , 5555 ), ( 'Rigol'   , 'MSO1104Z' ), 'DS1ZC194302050' ),
     }
+
+    dt = datetime.datetime.now(tz=datetime.timezone.utc)      # Force an aware-datetime
 
     for dev in args.device:
         # Look up device-id in the name table
@@ -220,6 +220,17 @@ if __name__ == '__main__':
             continue
 
         print("screenshot: {} ({})".format(scope_name, scope_addr))
-        screenshot = scope.screenshot()
+        screenshot = scope.screenshot(dt)
+        
+        ofn = xargs['file_fmt'].format(file_dir=xargs['file_dir'], dt=dt.astimezone(), mfr_abbr=scope.manufacturer_abbr, model=scope.model, serial=scope.serial, file_type=xargs['file_type'])
+
+        print('writing: {}'.format(ofn))
+        screenshot.save(ofn, dpi=(xargs['file_resolution'], xargs['file_resolution']), exif=screenshot.getexif())
+
+        sfn = xargs['link_fmt'].format(file_dir=xargs['file_dir'], dt=dt, manufacturer=scope.manufacturer, model=scope.model, serial=scope.serial, file_type=xargs['file_type'])
+        if sfn:
+            os.symlink(ofn, sfn + '.tmp')
+            os.rename(sfn + '.tmp', sfn)
+        
         print()
 
