@@ -48,7 +48,7 @@ class Instrument:
         'scpi_rigol1': {
             'screenshot'    : ( b':DISP:DATA? OFF,OFF,PNG\n', 1, lambda b: b[11:-1], {
                 'greyscale': False,
-                'invert'   : False,
+                'invert'   : True,
             } ),
         },
     }
