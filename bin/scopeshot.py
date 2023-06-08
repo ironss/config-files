@@ -52,7 +52,7 @@ class Instrument:
         },
     }
 
-    def __init__(self, name, addr):
+    def __init__(self, name, addr, autoid=True):
         self.name = name
         self.addr = addr
         
@@ -64,7 +64,8 @@ class Instrument:
         self.protocol_name = None
         self.protocol_cmd = None
 
-        self.identify()
+        if autoid:
+            self.identify()
         
         
     def identify(self):
