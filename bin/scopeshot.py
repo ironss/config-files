@@ -69,26 +69,24 @@ class Instrument:
         
         
     def identify(self):
-        print('identifying: {}:{}'.format(*self.addr))
         response = self._query(b'*IDN?\n', timeout=1)
         identity = response.decode().strip()
         parts = identity.split(',')
         if len(parts) == 4:
             self.identity = response
             self.manufacturer, self.model, self.serial, self.firmware_version = parts
+            self.manufacturer_abbr = self.manufacturer.split(' ')[0]
             self.protocol_name = self._scpi_protocols[(self.manufacturer, self.model)]
             self.protocol_cmd = self._scpi_protocol_cmds[self.protocol_name]
-            print('identity: {}:{}: {} {} {} {}'.format(*self.addr, *parts))
         else:
             self.identity = None
             self.manufacturer, self.model, self.serial, self.firmware_version = (None, None, None, None)
+            self.manufacturer_abbr = None
             self.protocol = None
-            print('identity: {}:{}: unknown'.format(*self.addr))
+            self.protocol_cmd = None
 
     
     def _screenshot_raw(self):
-        print('screenshotting: {}:{}'.format(*self.addr))
-
         cmd_details = self.protocol_cmd['screenshot']
         response = self._query(cmd_details[0], cmd_details[1])
         
@@ -103,10 +101,10 @@ class Instrument:
         kwargs_defaults = {
             'greyscale': True,
             'invert': True,
-            'comment_fmt': 'scopeshot {dt:%Y-%m-%d %H:%M:%S%z} {mfr:.5s} {model} {serial}',
+            'comment_fmt': 'scopeshot {dt:%Y-%m-%d %H:%M:%S%z} {mfr_abbr} {model} {serial}',
             'comment_font_fn': "courbd.ttf",
             'comment_font_size': 12,
-            'file_fmt': '{file_dir}/scopeshot-{dt:%Y-%m-%d_%H.%M.%S%z}-{mfr:.5s}-{model}-{serial}.{file_type}',
+            'file_fmt': '{file_dir}/scopeshot-{dt:%Y-%m-%d_%H.%M.%S%z}-{mfr_abbr}-{model}-{serial}.{file_type}',
             'file_type': 'png',
             'file_dir': os.path.join(os.environ['HOME'], 'Pictures'),
             'file_resolution': 120,
@@ -129,7 +127,7 @@ class Instrument:
         if kargs['invert']:
             img = PIL.ImageOps.invert(img)
 
-        cmt_text = kargs['comment_fmt'].format(dt=dt.astimezone(), mfr=self.manufacturer, model=self.model, serial=self.serial)
+        cmt_text = kargs['comment_fmt'].format(dt=dt.astimezone(), mfr_abbr=self.manufacturer_abbr, model=self.model, serial=self.serial)
         if cmt_text:
             cmt_font = PIL.ImageFont.truetype(kargs['comment_font_fn'], kargs['comment_font_size'])
             cmt_bbox = cmt_font.getbbox(cmt_text)
@@ -139,7 +137,7 @@ class Instrument:
             cmt_img = cmt_img.rotate(90, expand=1)
             img.paste(cmt_img, (img.size[0]-cmt_img.size[0]-2, img.size[1]-cmt_img.size[1]-2), PIL.ImageOps.invert(cmt_img))
         
-        ofn = kargs['file_fmt'].format(file_dir=kargs['file_dir'], dt=dt.astimezone(), mfr=self.manufacturer, model=self.model, serial=self.serial, file_type=kargs['file_type'])
+        ofn = kargs['file_fmt'].format(file_dir=kargs['file_dir'], dt=dt.astimezone(), mfr_abbr=self.manufacturer_abbr, model=self.model, serial=self.serial, file_type=kargs['file_type'])
 
         print('writing: {}'.format(ofn))
         img_exif = img.getexif()
@@ -215,8 +213,13 @@ if __name__ == '__main__':
         if scope_name is None:
             scope_name = '{}-{}'.format(*scope_addr)
         
-        print("screenshot: {} ({})".format(scope_name, scope_addr))
+        print("identify: {} ({})".format(scope_name, scope_addr))
         scope = Instrument(scope_name, scope_addr)
+        if scope.identity is None:
+            print("not found: {} ({})".format(scope_name, scope_addr))
+            continue
+
+        print("screenshot: {} ({})".format(scope_name, scope_addr))
         screenshot = scope.screenshot()
         print()
 
