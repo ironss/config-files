@@ -75,11 +75,12 @@ Host lucrezia.local
 
 # BBB and BBGW network-over-USB connections.
 # Don't verify the host-key because different devices have different host keys
+# or, on bbgw- device, host key certificates have not been installed
 Host 192.168.6.* 192.168.7.* bbgw-*
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   ForwardX11 no
-  SetEnv LANG=en_US.UTF8
+  SetEnv LANG=C.UTF8
 
 
 # Teltonika TRB145
