@@ -76,22 +76,24 @@ Host lucrezia.local
   HostKeyAlgorithms +ssh-rsa
   PubKeyAcceptedKeyTypes +ssh-rsa
   IdentityFile %d/.ssh/id_rsa-%h
-
+  UserKnownHostsFile=%d/.ssh/known_hosts_lucrezia
 
 # BBB and BBGW network-over-USB connections.
 # Don't verify the host-key because different devices have different host keys
 # or, on bbgw- device, host key certificates have not been installed
-Host 192.168.6.* 192.168.7.* bbgw-*
+Host 192.168.6.* 192.168.7.* bbgw-* bbb-*
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   ForwardX11 no
-  SetEnv LANG=C.UTF8
+  SetEnv LANG=C.UTF-8
 
 
 # Teltonika TRB145
 Host 192.168.2.1
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
+  ForwardX11 no
+  SetEnv LANG=C.UTF-8
   HostkeyAlgorithms +ssh-rsa
   PubKeyAcceptedKeyTypes +ssh-rsa
 
