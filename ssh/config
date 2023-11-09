@@ -49,6 +49,11 @@ Host gioconda
   Hostname constanza.irons.nz
   Port 22225
 
+Host musetta-j
+  Hostname constanza.irons.nz
+  Port 22226
+  ProxyJump stephen@constanza.irons.nz:443
+
 Host musetta
   Hostname constanza.irons.nz
   Port 22226
@@ -104,4 +109,3 @@ Host *
   UserKnownHostsFile=/dev/null
   #PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_rsa
-
