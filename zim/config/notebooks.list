@@ -1,9 +1,9 @@
 [NotebookList]
 Default=
-1=~/workspace/technical-notes
+1=~/Sync/technical-notes
 
 [Notebook 1]
-uri=~/workspace/technical-notes
+uri=~/Sync/technical-notes
 name=Technical Notes
 interwiki=None
 icon=None
