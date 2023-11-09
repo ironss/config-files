@@ -11,7 +11,7 @@ import subprocess
 import re
 
 def download_video(video_url):
-    p1 = subprocess.Popen(['youtube-dl', '-fm4a', '--no-progress', video_url], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    p1 = subprocess.Popen(['yt-dlp', '-fm4a', '--no-progress', video_url], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     output = p1.communicate()[0].decode('utf-8')
     matches = re.search(r"(Destination: )(.+?m4a)", output)
     filename = matches.group(2)
@@ -20,7 +20,7 @@ def download_video(video_url):
 def extract_audio(video_filename, audio_filename, overwrite=False):
     p1 = subprocess.Popen(['ffmpeg', '-y', '-i', video_filename, '-vn', '-acodec', 'copy', audio_filename], stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     output = p1.communicate()[0]
-    print(output)
+    #print(output)
 
 def calculate_bpm(filename):
     p1 = subprocess.Popen(['ffmpeg', '-y', '-i', filename, '-f', 'f32le', '-ar', '44100', '-ac', '1', '-'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
