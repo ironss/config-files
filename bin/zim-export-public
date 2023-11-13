@@ -1,3 +1,5 @@
+#! /bin/sh
+
 ZIM_NOTEBOOK=$HOME/Sync/technical-notes
 ZIM_PAGE="Public"
 
@@ -10,16 +12,40 @@ FQDN=$SUBDOMAIN.$DOMAIN
 IPNS_KEY_NAME=$FQDN
 IPNS_ID=$(ipfs key list -l | grep $IPNS_KEY_NAME | grep -o '^[^ ]\+')
 
-REMOTES=stephen@gioconda
+#REMOTES_PIN=pinata
+REMOTES_SSH="stephen@gioconda stephen@musetta"
+
 
 # Read keys and passwords
-source $HOME/.secrets
+. $HOME/.secrets
 
+GEN_TS=$(stat $EXPORT_PAGE -c %Y 2> /dev/null || echo 0)
+VC_TS=$(git -C $ZIM_NOTEBOOK log -1 --format=%ct)
+VC_DATE=$(git -C $ZIM_NOTEBOOK log -1 --format=%ci)
+VC_VERSION=$(git -C $ZIM_NOTEBOOK log -1 --format=git-%H)
+
+echo $GEN_TS
+echo $VC_TS
+echo $VC_DATE
+echo $VC_VERSION
+
+
+# Don't re-generate if previous generated date is newer than latest commit date
+if [ $GEN_TS -gt $VC_TS ]; then
+    echo "New: not re-generating"
+    exit 0
+fi
+
+echo $VC_DATE
+echo $VC_VERSION
 
 echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
     rm $EXPORT_DIR -rf
+    mkdir -p $EXPORT_DIR
+    echo "Version: $VC_VERSION ($VC_DATE)" > $EXPORT_DIR/.vc_version.txt
+
     zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
-    cp $EXPORT_DIR/$ZIM_PAGE.html $EXPORT_DIR/index.html
+    cp $EXPORT_PAGE $EXPORT_DIR/index.html
 echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE ...done
 
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
@@ -27,19 +53,26 @@ echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
     IPFS_PATH=/ipfs/$IPFS_ID
     echo New: $IPFS_PATH
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...done
-    
-    IPFS_OLD_PATH=$(ipfs name resolve $IPNS_KEY_NAME)
-    echo $IPNS_KEY_NAME: was: $IPFS_OLD_PATH
 
-echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...
-    ipfs pin remote rm --service=pinata               --name=$IPNS_KEY_NAME --force
-    ipfs pin remote add --service=pinata --background --name=$IPNS_KEY_NAME $IPFS_PATH
-echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...done
+IPFS_OLD_PATH=$(ipfs name resolve $IPNS_KEY_NAME)
+echo $IPNS_KEY_NAME: was: $IPFS_OLD_PATH
 
-for R in $REMOTES; do
+if [ $IPFS_PATH = $IPFS_OLD_PATH ]; then
+    echo CID not changed
+    exit 0
+fi
+
+for R in $REMOTES_PIN; do
+    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R ...
+        ipfs pin remote rm  --service=$R              --name=$IPNS_KEY_NAME --force
+        ipfs pin remote add --service=$R --background --name=$IPNS_KEY_NAME $IPFS_PATH
+    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...done
+done
+
+for R in $REMOTES_SSH; do
     echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R
-        ssh $R -o GatewayPorts=yes ipfs pin rm $IPFS_OLD_PATH
-        ssh $R -o GatewayPorts=yes ipfs pin add /ipfs/$IPFS_ID
+        ssh $R ipfs pin rm $IPFS_OLD_PATH
+        ssh $R ipfs pin add /ipfs/$IPFS_ID
     echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R ...done
 done
 
