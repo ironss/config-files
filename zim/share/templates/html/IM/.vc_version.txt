@@ -1,1 +1,1 @@
-/home/stephen/zim-export/.vc_version.txt
+/home/stephen/zim-export/Public/.vc_version.txt
