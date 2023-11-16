@@ -67,6 +67,14 @@ Host rosina
   Hostname constanza.irons.nz
   Port 22228
 
+Host constanza
+  Hostname constanza.irons.nz
+  Port 22
+
+Host cathy-laptop
+  Hostname constanza.irons.nz
+  Port 22229
+
 
 # Ubuntu 22.04 disables RSA keys types by default, preferring ecdsa, etc
 # lucrezia is an old WD device that does not support these types
