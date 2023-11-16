@@ -13,7 +13,7 @@ IPNS_KEY_NAME=$FQDN
 IPNS_ID=$(ipfs key list -l | grep $IPNS_KEY_NAME | grep -o '^[^ ]\+')
 
 #REMOTES_PIN=pinata
-REMOTES_SSH="stephen@gioconda stephen@musetta"
+REMOTES_SSH="stephen@gioconda stephen@musetta stephen@alisa stephen@tatyana"
 
 
 # Read keys and passwords
