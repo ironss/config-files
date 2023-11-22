@@ -12,8 +12,14 @@ FQDN=$SUBDOMAIN.$DOMAIN
 IPNS_KEY_NAME=$FQDN
 IPNS_ID=$(ipfs key list -l | grep $IPNS_KEY_NAME | grep -o '^[^ ]\+')
 
-#REMOTES_PIN=pinata
-REMOTES_SSH="stephen@gioconda stephen@musetta stephen@alisa stephen@tatyana"
+REMOTES_PIN=pinata
+REMOTES_SSH="
+stephen@gioconda 
+stephen@musetta 
+stephen@alisa 
+stephen@tatyana 
+stephen@elektra
+"
 
 
 # Read keys and passwords
@@ -29,59 +35,76 @@ echo $VC_TS
 echo $VC_DATE
 echo $VC_VERSION
 
-
-# Don't re-generate if previous generated date is newer than latest commit date
-if [ $GEN_TS -gt $VC_TS ]; then
-    echo "New: not re-generating"
-    exit 0
-fi
-
 echo $VC_DATE
 echo $VC_VERSION
 
-echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
-    rm $EXPORT_DIR -rf
-    mkdir -p $EXPORT_DIR
-    echo "Version: $VC_VERSION ($VC_DATE)" > $EXPORT_DIR/.vc_version.txt
 
-    zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
-    cp $EXPORT_PAGE $EXPORT_DIR/index.html
-echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE ...done
+# Don't re-generate if previous generated date is newer than latest commit date
+if [ $GEN_TS -gt $VC_TS ]; then
+    echo "Already generated, not re-generating"
+    #exit 0
+else
+    echo $0: exporting "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
+        rm $EXPORT_DIR -rf
+        mkdir -p $EXPORT_DIR
+        echo "Version: $VC_VERSION ($VC_DATE)" > $EXPORT_DIR/.vc_version.txt
+
+        zim --export --recursive --output="$EXPORT_PAGE" --overwrite --format=html --template=IM "$ZIM_NOTEBOOK" "$ZIM_PAGE"
+        cp $EXPORT_PAGE $EXPORT_DIR/index.html
+    echo $0: exporting $ZIM_NOTEBOOK:$ZIM_PAGE ...done
+fi
+
 
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...
     IPFS_ID=$(ipfs add -Q -r $EXPORT_DIR)
-    IPFS_PATH=/ipfs/$IPFS_ID
-    echo New: $IPFS_PATH
+    IPFS_FP=/ipfs/$IPFS_ID
+    echo New: $IPFS_FP
 echo $0: publishing "$ZIM_NOTEBOOK":"$ZIM_PAGE" ...done
 
+echo $IPFS_FP
+echo Resolving $IPNS_KEY_NAME
 IPFS_OLD_PATH=$(ipfs name resolve $IPNS_KEY_NAME)
 echo $IPNS_KEY_NAME: was: $IPFS_OLD_PATH
 
-if [ $IPFS_PATH = $IPFS_OLD_PATH ]; then
-    echo CID not changed
-    exit 0
+ipfs pin ls $IPFS_FP
+if [ x$? = x0 ]; then
+    echo Already pinned locally
+else
+    ipfs pin rm $IPFS_OLDPATH --recursive
+    ipfs pin add $IPFS_FP --recursive --progress
 fi
 
 for R in $REMOTES_PIN; do
-    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R ...
-        ipfs pin remote rm  --service=$R              --name=$IPNS_KEY_NAME --force
-        ipfs pin remote add --service=$R --background --name=$IPNS_KEY_NAME $IPFS_PATH
-    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to pinata ...done
+    echo $0: pinning $IPFS_FP as $IPNS_KEY_NAME to $R ...
+#        ipfs pin remote rm  --service=$R              --name=$IPNS_KEY_NAME --force
+#        ipfs pin remote add --service=$R --background --name=$IPNS_KEY_NAME $IPFS_FP
+    echo $0: pinning $IPFS_FP as $IPNS_KEY_NAME to pinata ...done
 done
 
 for R in $REMOTES_SSH; do
-    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R
-        ssh $R ipfs pin rm $IPFS_OLD_PATH
-        ssh $R ipfs pin add /ipfs/$IPFS_ID
-    echo $0: pinning $IPFS_PATH as $IPNS_KEY_NAME to $R ...done
+    RHN=${R#*@}
+    echo $RHN
+    if [ x$RHN = x$(hostname) ]; then
+        echo $0: not pinning to local host
+    else
+        ssh $R ipfs pin ls $IPFS_FP
+        if [ x$? = x0 ]; then
+            echo $0: already pinned
+        else
+            echo $0: pinning $IPFS_FP as $IPNS_KEY_NAME to $R
+        #        ssh $R ipfs pin rm  --recursive $IPFS_OLD_PATH
+        #        ssh $R ipfs pin add --recursive --progress $IPFS_FP &
+            echo $0: pinning $IPFS_FP as $IPNS_KEY_NAME to $R ...done
+        fi
+    fi
 done
 
-echo $0: updating DNS: $FQDN to $IPFS_PATH ...
-    curl -X PUT "https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.$SUBDOMAIN/TXT" -H "Authorization: Apikey $GANDI_APIKEY" -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"\\\"dnslink=$IPFS_PATH\\\"\"]}"
+echo $0: updating DNS: $FQDN to $IPFS_FP ...
+    curl -X PUT "https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.$SUBDOMAIN/TXT" -H "Authorization: Apikey $GANDI_APIKEY" -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"\\\"dnslink=$IPFS_FP\\\"\"]}"
     echo
-echo $0: updating DNS: $FQDN to $IPFS_PATH ...done
+echo $0: updating DNS: $FQDN to $IPFS_FP ...done
 
-echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_PATH ...
-    ipfs name publish -Q --lifetime 48h --ttl 300s --key=$IPNS_KEY_NAME $IPFS_PATH
-echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_PATH ...done
+echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_FP ...
+    ipfs name publish -Q --lifetime 48h --ttl 300s --key=$IPNS_KEY_NAME $IPFS_FP
+echo $0: updating /ipns/$IPNS_KEY_NAME to $IPFS_FP ...done
 
