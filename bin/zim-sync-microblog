@@ -1,0 +1,45 @@
+#! /usr/bin/python3
+
+import datetime
+import sys
+import zim.formats.wiki
+
+fn_tmp = sys.argv[1]
+fn_src = sys.argv[2]
+dn_attach = sys.argv[3]
+dn_docroot = sys.argv[4]
+
+fn_out = '/home/stephen/zim-sync-test.txt'
+
+with open(fn_out, 'w') as f_out:
+    f_out.write('{}\n'.format(fn_tmp))
+    f_out.write('{}\n'.format(fn_src))
+    f_out.write('{}\n'.format(dn_attach))
+    f_out.write('{}\n'.format(dn_docroot))
+    
+    f_out.write('{}\n'.format('--------------'))
+    with open(fn_tmp) as f:
+        for l in f.readlines():
+            f_out.write(l)
+
+    f_out.write('{}\n'.format('--------------'))
+    with open(fn_src) as f:
+        for l in f.readlines():
+            f_out.write(l)
+
+    pp = zim.formats.wiki.Parser()
+    
+    with open(fn_src) as f:
+        ptree = pp.parse(f, file_input=True)
+        
+    f_out.write('{}\n'.format('--------------'))
+    f_out.write('{}\n'.format(ptree))
+
+    dd = zim.formats.wiki.Dumper()
+    f_out.write('{}\n'.format('--------------'))
+    for k, v in ptree.meta.items():
+        f_out.write('{}: {}\n'.format(k, v))
+        
+    for l in dd.dump(ptree):
+        f_out.write('{}c'.format(l))
+        
