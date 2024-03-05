@@ -1,0 +1,20 @@
+#! /bin/sh
+
+EBOOK_DIR=/home/stephen/Sync/kobo-ebooks
+KOBO_DIR=/media/stephen/KOBOeReader
+
+RSYNC_OPTS="$RSYNC_OPTS --recursive"
+RSYNC_OPTS="$RSYNC_OPTS --update"
+RSYNC_OPTS="$RSYNC_OPTS --modify-window=2"
+
+#RSYNC_OPTS="$RSYNC_OPTS --checksum"
+
+RSYNC_OPTS="$RSYNC_OPTS --verbose"
+#RSYNC_OPTS="$RSYNC_OPTS --dry-run"
+
+#echo $RSYNC_OPTS
+
+rsync $RSYNC_OPTS $EBOOK_DIR/ $KOBO_DIR
+echo $?
+
+
