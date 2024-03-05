@@ -1,0 +1,23 @@
+#! /bin/sh
+
+SUBDOMAIN=$(hostname)
+DOMAIN=irons.nz
+echo $DOMAIN
+echo $SUBDOMAIN
+
+. $HOME/.secrets
+
+DNS_URL="https://api.gandi.net/v5/livedns/domains"
+AAAA_json=$(curl -s -X GET "${DNS_URL}/${DOMAIN}/records/${SUBDOMAIN}/AAAA" -H "Authorization: Apikey $GANDI_APIKEY")
+AAAA_ip6=$(echo $AAAA_json | jq -r '.rrset_values[0]')
+echo $AAAA_ip6
+
+MY_ip6=$(curl -s -X GET https://api6.ipify.org)
+echo $MY_ip6
+
+if [ _${MY_ip6} != _${AAAA_ip6} ]; then
+    echo "writing: ${MY_ip6}"
+    AAAA_json=$(curl -s -X PUT "${DNS_URL}/${DOMAIN}/records/${SUBDOMAIN}/AAAA" -H "Authorization: Apikey $GANDI_APIKEY" \
+    -H "Content-Type: application/json" --data "{\"rrset_ttl\": 300, \"rrset_values\":[\"${MY_ip6}\"]}")
+fi
+
