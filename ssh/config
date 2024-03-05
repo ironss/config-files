@@ -25,6 +25,13 @@ Host github.com-iotec
   UserKnownHostsFile ~/.ssh/known_hosts_github
 
 
+Host gitea.irons.nz
+  Hostname gitea.irons.nz
+  User gitea
+  IdentityFile ~/.ssh/id_ed25519
+  ControlMaster no
+
+
 # Various servers behind home-routers, so invisible to the world
 # They establish a remote connection to a visible server 'constanza'.
 
