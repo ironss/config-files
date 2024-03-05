@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=X-Zim-CustomTool
+Version=1.0
+GenericName=
+Name=Sync with micro.blog
+Comment=Sync a page with micro.blog
+Exec=
+TryExec=
+Icon=
+MimeType=
+Terminal=false
+NoDisplay=false
+X-Zim-ExecTool=zim-sync-microblog "%f" "%s" "%d" "%D"
+X-Zim-ReadOnly=false
+X-Zim-ShowInToolBar=false
+X-Zim-ShowInContextMenu=Page
+X-Zim-ReplaceSelection=false
+
