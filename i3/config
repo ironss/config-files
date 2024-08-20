@@ -39,7 +39,8 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-bindsym Print exec gnome-screenshot -i
+# bindsym Print exec gnome-screenshot -i
+bindsym Print exec "export TS=$(date +%Y-%m-%dT%H.%M.%S%z); gnome-screenshot -f $HOME/Pictures/screenshot-$TS.png ; ln -fs $HOME/Pictures/screenshot-$TS.png $HOME/Pictures/screenshot.png"
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
