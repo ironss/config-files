@@ -1,6 +1,12 @@
 [% IF journal_plugin.page_type == 'day' -%]
 ======= [% strftime("%Y-%m-%d %A", journal_plugin.date) %] =======
 
+== TODO ==
+[ ] Item
+
+== Timesheet ==
+* start - end Summary
+
 [%- ELSIF journal_plugin.page_type == 'week' -%]
 ======= [% strfcal("%Y-W%W", journal_plugin.date) %] =======
 [% strftime("%d %B", journal_plugin.date) %] to [% strftime("%d %B", journal_plugin.end_date) %]
@@ -19,6 +25,5 @@
 
 [%- ELSE -%]
 ======= [% page.basename %] =======
-[% gettext("Created") %] [% strftime("%Y-%m-%d") %]
 
 [%- END %]
