@@ -42,10 +42,12 @@ Host elektra
 Host alisa
   Hostname constanza.irons.nz
   Port 22222
+  ForwardX11 yes
 
 Host tatyana
   Hostname constanza.irons.nz
   Port 22223
+  ForwardX11 yes
 
 Host teresa
   Hostname constanza.irons.nz
