@@ -13,7 +13,7 @@ Host github.com-private
   StrictHostKeyChecking yes
   UserKnownHostsFile ~/.ssh/known_hosts_github
 
-Host github.com-iotec
+Host github.com-iotec github.com
   Hostname github.com
   User git
   IdentityFile ~/.ssh/id_rsa-stephen.irons+%l@iotec.space
@@ -84,6 +84,14 @@ Host cathy-laptop
   Hostname constanza.irons.nz
   Port 22229
 
+Host lucrezia lucrezia.irons.nz
+  Hostname constanza.irons.nz
+  Port 22230
+
+Host cathy-hp-probook
+  Hostname constanza.irons.nz
+  Port 22231
+  
 
 # Ubuntu 22.04 disables RSA keys types by default, preferring ecdsa, etc
 # lucrezia is an old WD device that does not support these types
@@ -127,4 +135,4 @@ Host *
   StrictHostKeyChecking yes
   UserKnownHostsFile=/dev/null
   #PreferredAuthentications publickey
-  IdentityFile ~/.ssh/id_rsa
+  IdentityFile ~/.ssh/id_ed25519
