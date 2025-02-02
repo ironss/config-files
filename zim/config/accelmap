@@ -18,6 +18,7 @@
 ; (gtk_accel_path "<Actions>/MainWindow/open_page_parent" "<Alt>Up")
 ; (gtk_accel_path "<Actions>/NotebookView/undo" "<Primary>z")
 ; (gtk_accel_path "<Actions>/UIActions/show_help_bugs" "")
+; (gtk_accel_path "<Actions>/inserted_objects/insert_image+equation" "")
 ; (gtk_accel_path "<Actions>/NotebookView/insert_new_file_menu" "")
 ; (gtk_accel_path "<Actions>/UIActions/open_attachments_folder" "")
 ; (gtk_accel_path "<Actions>/MainWindow/file_menu" "")
