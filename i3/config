@@ -197,7 +197,7 @@ bar {
 
 
 exec --no-startup-id /usr/bin/gnome-flashback
-exec --no-startup-id /usr/local/bin/volctl
+# exec --no-startup-id /usr/local/bin/volctl
 
 
 # Assign application windows to various desktops
@@ -208,16 +208,5 @@ exec --no-startup-id /usr/local/bin/volctl
 # WM_NAME(STRINGS) = "*config (~/.config/i3) - gedit                       # i3 criterion: title
 
 # Make Gnome calculator a floating window
-for_window [ class="Gnome-calculator" ] floating enable
-
-# Skype goes to desktop 10
-assign [ class="Skype" ] 10
-#for_window [ class="Skype" ] floating enable
-
-# Slack goes to desktop 10
-assign [class="Slack" ] 10
-#for_window [ class="Slack" ] floating enable
-
-# Eclipse goes to desktop 6
-#assign [ class="Eclipse" ] 6
+for_window [ class="gnome-calculator" ] floating enable
 
