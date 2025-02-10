@@ -1,5 +1,7 @@
-# Github uses the ssh key to identify the github user. If you have multiple github accounts
-# you need to have a separate ssh key for each github account
+# Github uses the ssh key to identify the github user. If you have multiple 
+# accounts on github, you need to have 
+# * a separate ssh key for each account
+# * a way to distinguish the different accounts on github
 
 Host github.com-private
   Hostname github.com
@@ -35,69 +37,71 @@ Host gitea.irons.nz
 # Various servers behind home-routers, so invisible to the world
 # They establish a remote connection to a visible server 'constanza'.
 
-Host elektra
+Host constanza
+  Hostname constanza.irons.nz
+  Port 22
+
+Host elektra elektra.irons.nz
   Hostname constanza.irons.nz
   Port 22221
+  ForwardX11 yes
 
-Host alisa
+Host alisa alisa.irons.nz
   Hostname constanza.irons.nz
   Port 22222
   ForwardX11 yes
 
-Host tatyana
+Host tatyana tatyana.irons.nz
   Hostname constanza.irons.nz
   Port 22223
   ForwardX11 yes
 
-Host teresa
+Host teresa teresa.iotec.space
   Hostname constanza.irons.nz
   Port 22224
 
-# Not yet completed
-Host gioconda
+Host gioconda gioconda.iotec.space
   Hostname constanza.irons.nz
   Port 22225
-
-Host musetta-j
-  Hostname constanza.irons.nz
-  Port 22226
-  ProxyJump stephen@constanza.irons.nz:443
 
 Host musetta
   Hostname constanza.irons.nz
   Port 22226
 
-Host rebecca
+Host rebecca rebecca.iotec.space
   Hostname constanza.irons.nz
   Port 22227
 
-# Not yet created
-Host rosina
+Host rosina rosina.iotec.space
   Hostname constanza.irons.nz
   Port 22228
 
-Host constanza
-  Hostname constanza.irons.nz
-  Port 22
-
-Host cathy-laptop
-  Hostname constanza.irons.nz
-  Port 22229
+# Host cathy-laptop
+#   Hostname constanza.irons.nz
+#   Port 22229
 
 Host lucrezia lucrezia.irons.nz
   Hostname constanza.irons.nz
   Port 22230
 
-Host cathy-hp-probook
+Host cathy-hp-probook cathy-hp-probook.irons.nz
   Hostname constanza.irons.nz
   Port 22231
-  
+ 
+Host bbgw-030017 bbgw-030017.irons.nz
+  Hostname constanza.irons.nz
+  Port 22232
+
+Host hyperion hyperion.iotec.space
+  Hostname constanza.irons.nz
+  Port 22233
+
 
 # Ubuntu 22.04 disables RSA keys types by default, preferring ecdsa, etc
 # lucrezia is an old WD device that does not support these types
 # This stanza enables RSA algorithms for lucrezia only
 
-Host lucrezia.local
+Host lucrezia lucrezia.irons.nz lucrezia.local
   HostKeyAlgorithms +ssh-rsa
   PubKeyAcceptedKeyTypes +ssh-rsa
   IdentityFile %d/.ssh/id_rsa-%h
