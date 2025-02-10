@@ -1,0 +1,41 @@
+#! /usr/bin/python3
+
+# Test speakers
+# * sound server
+#     * pipewire only
+#
+# * select device
+#     * -L list devices
+#     * -D device
+#     * if not specified, use server default 
+#
+# * 
+
+import sys
+
+
+channel_specs = {
+    'front-left': 1,
+    'front-right': 2,
+    'rear-left': 3,
+    'rear-right': 4,
+    'front-centre': 5,
+    'lfe': 6,
+    'side-left': 7,
+    'side-right': 8,
+}
+
+channel_wavs = {
+    1: 'Front_Left.wav',
+    2: 'Front_Right.wav',
+    3: 'Rear_Left.wav',
+    4: 'Rear_Right.wav',
+    5: 'Front_Center.wav',
+}
+
+args = sys.argv
+ch_names = args[1:] or channel_specs.keys()
+
+for chn in ch_names:
+    print(chn)
+    
