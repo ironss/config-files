@@ -2,6 +2,9 @@ mbsync service
 ##############
 
 Systemd timer and service files for synchronising mailboxes using mbsync.
+Needs the following
+
+* 
 
 Overview
 ========
