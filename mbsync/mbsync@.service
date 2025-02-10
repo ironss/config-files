@@ -1,0 +1,14 @@
+[Unit]
+Description=mbsync service (%i)
+Documentation=man:mbsync(1)
+ConditionPathExists=%h/.mbsyncrc
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mbsync -V %i
+StandardOutput=journal
+LoadCredential=mbsync:%h/.secrets.gandi
+
+[Install]
+WantedBy=mail.target
+

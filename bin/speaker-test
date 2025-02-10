@@ -11,31 +11,39 @@
 #
 # * 
 
+import os
 import sys
 
 
 channel_specs = {
-    'front-left': 1,
-    'front-right': 2,
-    'rear-left': 3,
-    'rear-right': 4,
-    'front-centre': 5,
-    'lfe': 6,
-    'side-left': 7,
-    'side-right': 8,
+    'front-left': (1, 'Front_Left.wav'),
+    'front-centre': (2, 'Front_Center.wav'),
+#    'front-center': (2, 'Front_Center.wav'),
+    'front-right': (3, 'Front_Right.wav'),
+    'side-right': (4, 'Side_Right.wav'),
+    'rear-right': (5, 'Rear_Right.wav'),
+    'rear-left': (6, 'Rear_Left.wav'),
+    'side-left': (7, 'Side_Left.wav'),
+    'rear-centre': (8, 'Rear_Center.wav'),
+#    'lfe': (8, 'Rear_Center.wav'),
 }
 
-channel_wavs = {
-    1: 'Front_Left.wav',
-    2: 'Front_Right.wav',
-    3: 'Rear_Left.wav',
-    4: 'Rear_Right.wav',
-    5: 'Front_Center.wav',
-}
 
 args = sys.argv
-ch_names = args[1:] or channel_specs.keys()
+ch_names_req = args[1:] or channel_specs.keys()
+ch_names = [ chn for chn in ch_names_req if chn in channel_specs.keys() ]
 
-for chn in ch_names:
-    print(chn)
+for ch_name in ch_names:
+    ch_id, ch_wav_fn = channel_specs[ch_name]
+    print(ch_name, ch_id, ch_wav_fn)
+
+    cmd_params = [
+        '/usr/bin/speaker-test',
+        '-c8',
+        '-p100000',
+        '-t', 'wav',
+        '-s{}'.format(ch_id),
+        '-w', ch_wav_fn,
+    ]
     
+    os.system(' '.join(cmd_params))
