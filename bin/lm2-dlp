@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# Use browser network inspect to find URL of index.m3u8 file, or of one of the segment .ts files
+
 URL=${1?Missing URL}
 OFP=${2?Missing output filename}
 
