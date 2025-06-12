@@ -92,22 +92,14 @@ Host hyperion hyperion.iotec.space
   Hostname constanza.irons.nz
   Port 22233
 
-Host bbgw-* bbgw-*.irons.nz
-  StrictHostKeyChecking yes
-  UserKnownHostsFile /dev/null
-  ForwardX11 no
-  SetEnv LANG=C.UTF-8
- 
-Include ~/.ssh/config.d/*.conf
 
+Include ~/.ssh/config.d/*.conf
 
 Host bbgw-* bbgw-*.irons.nz
   StrictHostKeyChecking yes
   UserKnownHostsFile /dev/null
   ForwardX11 no
   SetEnv LANG=C.UTF-8
- 
-Include ~/.ssh/config.d/*.conf
 
 
 # Ubuntu 22.04 disables RSA keys types by default, preferring ecdsa, etc
