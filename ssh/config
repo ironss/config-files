@@ -92,6 +92,14 @@ Host hyperion hyperion.iotec.space
   Hostname constanza.irons.nz
   Port 22233
 
+Host bbgw-* bbgw-*.irons.nz
+  StrictHostKeyChecking yes
+  UserKnownHostsFile /dev/null
+  ForwardX11 no
+  SetEnv LANG=C.UTF-8
+ 
+Include ~/.ssh/config.d/*.conf
+
 
 Host bbgw-* bbgw-*.irons.nz
   StrictHostKeyChecking yes
@@ -106,22 +114,22 @@ Include ~/.ssh/config.d/*.conf
 # lucrezia is an old WD device that does not support these types
 # This stanza enables RSA algorithms for lucrezia only
 
-Host lucrezia lucrezia.irons.nz lucrezia.local
+Host lucrezia lucrezia.irons.nz lucrezia.local 192.168.1.201
   HostKeyAlgorithms +ssh-rsa
   PubKeyAcceptedKeyTypes +ssh-rsa
-  IdentityFile %d/.ssh/id_rsa-%h
+  IdentityFile %d/.ssh/id_rsa-lucrezia.local
   UserKnownHostsFile=%d/.ssh/known_hosts_lucrezia
 
 # BBB and BBGW network-over-USB connections.
 # Don't verify the host-key because different devices have different host keys
 # or, on bbgw- device, host key certificates have not been installed
-Host 192.168.6.* 192.168.7.* bbgw-* bbb-*
+Host 192.168.6.* 192.168.7.* BeagleBone.local
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   ForwardX11 no
   SetEnv LANG=C.UTF-8
 
-
+  
 # Teltonika TRB145
 Host 192.168.2.1
   StrictHostKeyChecking no
@@ -145,3 +153,4 @@ Host *
   UserKnownHostsFile=/dev/null
   #PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_ed25519
+
