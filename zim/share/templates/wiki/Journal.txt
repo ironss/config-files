@@ -5,7 +5,7 @@
 [ ] Item
 
 == Timesheet ==
-* start - end Summary
+* start–end Summary
 
 [%- ELSIF journal_plugin.page_type == 'week' -%]
 ======= [% strfcal("%Y-W%W", journal_plugin.date) %] =======
