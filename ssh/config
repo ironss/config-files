@@ -102,6 +102,8 @@ Host hyperion hyperion.iotec.space
   Hostname constanza.irons.nz
   Port 22233
 
+Host *
+  Include ~/.ssh/config.d/*.conf
 
 Host *
   Include ~/.ssh/config.d/*.conf
