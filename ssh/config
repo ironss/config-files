@@ -37,34 +37,44 @@ Host gitea.irons.nz
 # Various servers behind home-routers, so invisible to the world
 # They establish a remote connection to a visible server 'constanza'.
 
-Host constanza
+Host constanza.ygg
+  # Empty
+
+Host constanza constanza.irons.nz constanza.rssh
   Hostname constanza.irons.nz
   Port 22
 
-Host elektra elektra.irons.nz
+
+Host elektra.rssh
   Hostname constanza.irons.nz
   Port 22221
+
+Host elektra elektra.irons.nz elektra.ygg elektra.rssh
   ForwardX11 yes
 
-Host alisa alisa.irons.nz
+Host alisa.rssh
   Hostname constanza.irons.nz
   Port 22222
+
+Host alisa alisa.irons.nz alisa.ygg alisa.rssh
   ForwardX11 yes
 
-Host tatyana tatyana.irons.nz
+Host tatyana.rssh
   Hostname constanza.irons.nz
   Port 22223
+
+Host tatyana tatyana.irons.nz tatyana.ygg tatyana.rssh
   ForwardX11 yes
 
-Host teresa teresa.iotec.space
+Host teresa teresa.iotec.space teresa.rssh
   Hostname constanza.irons.nz
   Port 22224
 
-Host gioconda gioconda.iotec.space
+Host gioconda gioconda.iotec.space gioconda.rssh
   Hostname constanza.irons.nz
   Port 22225
 
-Host musetta
+Host musetta.rssh
   Hostname constanza.irons.nz
   Port 22226
 
@@ -93,7 +103,8 @@ Host hyperion hyperion.iotec.space
   Port 22233
 
 
-Include ~/.ssh/config.d/*.conf
+Host *
+  Include ~/.ssh/config.d/*.conf
 
 Host bbgw-* bbgw-*.irons.nz
   StrictHostKeyChecking yes
@@ -145,4 +156,3 @@ Host *
   UserKnownHostsFile=/dev/null
   #PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_ed25519
-
