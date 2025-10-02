@@ -1,0 +1,107 @@
+#! /bin/sh
+
+# Process video and audio recordings
+
+# Given a list of recording filenames as command-line parameters
+# * Video files
+#   * Re-encode video at camera resolution h264, with aac audio
+#   * Re-encode video at 360p h264, with aac audio
+#       * 640x360 for 16:9
+#       * 480x360 for 4:3
+#
+# * Audio files
+#   * Copy original WAV file
+#   * Re-encode audio as aac
+#
+# TODO
+# * Create low-resolution video files first: they go quickest
+# * If audio is already AAC, MP3 or other compressed format, do not re-encode; just copy the audio
+# * For camera-resolution files, include the video frame size in the filename (something like ".original-1920x1080.mp4)"
+#
+# Notes
+# * 'exiftool' can extract tags from EXIF tags from EXIF files, and many other tag types and file types.
+# * However, there seems to be very little standardisation of the tag names; different file types use many different tag schemes, 
+#   and have different tag names.
+# * Some useful tag names, and example values
+#   * ImageSize: 1920x1080
+#   * AudioFormat: mp4a, sowt
+#   * MIMEType: video/mp4, audio/x-wav, video/quicktime
+#   * Originator: "Zoom Handy Recorder H4n"
+#   * Encoding: "Microsoft PCM"
+
+
+outdir=out
+mkdir -p $outdir
+
+rotate_deg=1.5
+
+while [ $# -ne 0 ]; do
+    fn="$1"
+    shift
+
+    echo $fn
+    ext=$(echo ${fn##*.} | tr '[:lower:]' '[:upper:]')
+
+    case $ext in
+        "WAV")
+            cp $fn $outdir/$fn
+            ffmpeg -y -i "$fn" "$outdir/$fn.m4a"
+            ;;
+            
+        "M4A")
+            cp $fn $outdir/$fn
+            ;;
+            
+        "MOV" | "MP4")
+            bn="${fn%.*}"  # Remove extension
+            image_size=$(exiftool -S -ImageSize "$fn" | cut -d' ' -f2)
+            image_width=${image_size%%x*}
+            image_height=${image_size##*x}
+            
+            for size in "640x360" "1920x1080" "original"; do
+                if [ $size = "original" ] ; then
+                    scale_param=""
+                    preset_param=""
+                    imagesize_param=original_\($image_size\)
+	                ofn="$outdir/$bn-$imagesize_param.mp4"
+                else
+                    width=${size%%x*}
+                    height=${size##*x}
+                    imagesize_param=$size
+                    
+                    if [ $rotate_deg != 0 ]; then
+                        rotate_rad=$(echo "$rotate_deg * 3.14159 / 180" | bc -l)
+                        w_=$(echo "$image_width * c($rotate_rad) + $image_height * s($rotate_rad)" | bc -l)
+                        h_=$(echo "$image_width * s($rotate_rad) + $image_height * c($rotate_rad)" | bc -l)
+                        crop_x=$(echo "($w_ - $image_width) / 2" | bc -l)
+                        crop_y=$(echo "($h_ - $image_height) / 2" | bc -l)
+                        crop_w=$(echo "$w_ - 2 * $crop_x" | bc -l)
+                        crop_h=$(echo "$h_ - 2 * $crop_y" | bc -l)
+                        echo $w_ $h_ $crop_x $crop_y $crop_w $crop_h
+                        #filter_param="rotate=$rotate_rad,crop=$crop_w:$crop_h:$crop_x:$crop_y,scale=$width:$height"
+                        filter_param="rotate=$rotate_rad,scale=$width:$height"
+                        ofn="$outdir/$bn-$imagesize_param-rot_$rotate_deg.mp4"
+                    else
+	                    filter_param="scale=$width:$height"
+                        ofn="$outdir/$bn-$imagesize_param.mp4"
+                    fi
+                        
+                    preset_param="-preset slower"
+                fi
+
+                audioformat=$(exiftool -S -AudioFormat "$fn" | cut -d' ' -f2 )
+                if [ x$audioformat = xmp4a ]; then
+                    audio_param="-c:a copy"
+                else
+                    audio_param=""
+                fi 
+                
+                echo $ofn
+                ffmpeg_cmd="ffmpeg -y -i \"$fn\" -vf $filter_param $preset_param $audio_param \"$ofn\""
+                echo $ffmpeg_cmd
+                eval $ffmpeg_cmd
+            done
+            ;;
+    esac
+done
+
