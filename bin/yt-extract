@@ -40,6 +40,9 @@ if __name__ == '__main__':
     parser.add_argument('video', help='video URL_or_filename')
     parser.add_argument('artist', help='name of the artist')
     parser.add_argument('song', help='name of the song')
+    parser.add_argument('album', nargs='?', help='name of the album')
+    parser.add_argument('track', nargs='?', help='track number')
+    
     # whether to overwrite an existing music file
     # whether to use the calculated BPM or a passed-in BPM
     
@@ -52,10 +55,18 @@ if __name__ == '__main__':
         exit(-1)
 
     artist = args.artist
-    album = 'Online'
     song = args.song
-    music_path = '/home/stephen/Music/Various Artists - Online'
-    music_filename = os.path.join(music_path, '{} - {}.m4a'.format(artist, song))
+
+    if args.album is None:
+        album = 'Online'
+        music_path = '/home/stephen/Music/Various Artists - Online'
+        music_filename = os.path.join(music_path, '{} - {}.m4a'.format(artist, song))
+    else:
+        album = args.album
+        track = args.track
+        music_path = '/home/stephen/Music/{} - {}'.format(artist, album)
+        music_filename = os.path.join(music_path, '{:02d} - {}.m4a'.format(int(track), song))
+    
     print(video_filename, music_filename)
     
     try:
@@ -73,5 +84,8 @@ if __name__ == '__main__':
     mf.tags['ALBUM'] = album
     mf.tags['TITLE'] = song
     mf.tags['BPM'] = bpm
+    if track:
+        mf.tags['TRACKNUMBER'] = track
+
     mf.save()
 
