@@ -1,0 +1,10 @@
+L_USER=rssh
+L_KEY=/var/lib/rssh/.ssh/id_ed25519
+
+R_PORT=<choose>
+L_PORT=22
+RSSH_USER=rssh
+RSSH_HOST=constanza.irons.nz
+RSSH_PORT=22
+
+TIMEOUT=300

@@ -1,0 +1,4 @@
+#! /bin/sh
+
+. /etc/rssh/$1
+sudo -u $L_USER /usr/bin/ssh -NT -R $R_PORT:localhost:$L_PORT $RSSH_USER@$RSSH_HOST -p $RSSH_PORT -i $L_KEY -o ExitOnForwardFailure=yes -o ServerAliveInterval=$TIMEOUT -o ControlPath=none
