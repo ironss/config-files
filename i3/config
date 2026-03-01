@@ -1,7 +1,7 @@
 # i3 config file (v4)
 # Modified from 4.17.1
-# Stephen Irons
 # See http://i3wm.org/docs/userguide.html
+# Copyright © Stephen Irons 2024-2026
 
 
 set $mod Mod4
@@ -42,6 +42,15 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # bindsym Print exec gnome-screenshot -i
 bindsym Print exec "export TS=$(date +%Y-%m-%dT%H.%M.%S%z); gnome-screenshot -f $HOME/Pictures/screenshot-$TS.png ; ln -fs $HOME/Pictures/screenshot-$TS.png $HOME/Pictures/screenshot.png"
 
+# Set right-alt as the compose key
+exec --no-startup-id setxkbmap -option compose:ralt
+
+# No longer use gnome-flashback
+# exec --no-startup-id /usr/bin/gnome-flashback
+
+# Swap mouse buttons: moved to `hostname`.conf
+# exec --no-startup-id xmodmap -e "pointer = 3 2 1"
+# exec --no-startup-id xinput set-button-map "Primax Kensington Eagle Trackball" "3 2 1 4 5 6 7"
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -195,11 +204,6 @@ bar {
         font pango:DejaVu Sans Mono 10
 }
 
-
-exec --no-startup-id /usr/bin/gnome-flashback
-# exec --no-startup-id /usr/local/bin/volctl
-
-
 # Assign application windows to various desktops
 # To find window details, run 'xprop' then click in the window
 # WMCLASS(STRING) = "gedit", "Gedit"                                      # i3 criteria: 'instance', class respectively
@@ -209,4 +213,3 @@ exec --no-startup-id /usr/bin/gnome-flashback
 
 # Make Gnome calculator a floating window
 for_window [ class="gnome-calculator" ] floating enable
-
