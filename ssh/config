@@ -46,25 +46,25 @@ Host constanza constanza.irons.nz constanza.rssh
   Port 22
 
 
-Host elektra.rssh
+Host elektra elektra.irons.nz elektra.rssh
   Hostname constanza.irons.nz
   Port 22221
 
-Host elektra elektra.irons.nz elektra.ygg elektra.rssh
+Host elektra elektra.irons.nz elektra.rssh elektra.ygg
   ForwardX11 yes
 
-Host alisa.rssh
+Host alisa alisa.irons.nz alisa.rssh
   Hostname constanza.irons.nz
   Port 22222
 
-Host alisa alisa.irons.nz alisa.ygg alisa.rssh
+Host alisa alisa.irons.nz alisa.rssh alisa.ygg
   ForwardX11 yes
 
-Host tatyana.rssh
+Host tatyana tatyana.irons.nz tatyana.rssh
   Hostname constanza.irons.nz
   Port 22223
 
-Host tatyana tatyana.irons.nz tatyana.ygg tatyana.rssh
+Host tatyana tatyana.irons.nz tatyana.rssh tatyana.ygg
   ForwardX11 yes
 
 Host teresa teresa.iotec.space teresa.rssh
@@ -75,15 +75,15 @@ Host gioconda gioconda.iotec.space gioconda.rssh
   Hostname constanza.irons.nz
   Port 22225
 
-Host musetta.rssh
+Host musetta musetta.irons.nz musetta.rssh
   Hostname constanza.irons.nz
   Port 22226
 
-Host rebecca rebecca.iotec.space
+Host rebecca rebecca.iotec.space rebecca.rssh
   Hostname constanza.irons.nz
   Port 22227
 
-Host rosina rosina.iotec.space
+Host rosina rosina.iotec.space rosina.rssh
   Hostname constanza.irons.nz
   Port 22228
 
@@ -91,15 +91,15 @@ Host rosina rosina.iotec.space
 #   Hostname constanza.irons.nz
 #   Port 22229
 
-Host lucrezia lucrezia.irons.nz
+Host lucrezia lucrezia.irons.nz lucrezia.rssh
   Hostname constanza.irons.nz
   Port 22230
 
-Host cathy-hp-probook cathy-hp-probook.irons.nz
+Host cathy-hp-probook cathy-hp-probook.irons.nz cathy-hp-probook.rssh
   Hostname constanza.irons.nz
   Port 22231
  
-Host hyperion hyperion.iotec.space
+Host hyperion hyperion.iotec.space hyperion.rssh
   Hostname constanza.irons.nz
   Port 22233
 
