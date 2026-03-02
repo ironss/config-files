@@ -213,3 +213,9 @@ bar {
 
 # Make Gnome calculator a floating window
 for_window [ class="gnome-calculator" ] floating enable
+
+# Display esphome host-build as a floating window at 2x the natural height
+# Add 4 px width and 20 px height for borders and titlebar
+# Use
+#   xwininfo -id $(xdotool search --name "esphome-m5c-9001")
+for_window [title="^esphome-m5c-9001"] floating enable, resize set 324 180
