@@ -103,7 +103,7 @@ Host hyperion hyperion.iotec.space hyperion.rssh
   Hostname constanza.irons.nz
   Port 22233
 
-Host francesca francesa.irons.nz francesca.rssh
+Host francesca francesca.irons.nz francesca.rssh
   Hostname constanza.irons.nz
   Port 22243
 
