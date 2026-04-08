@@ -9,20 +9,60 @@ import math
 import random
 #import sys
 
-RFC4648_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-CROCKFORD_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
-TRANSLATION_TABLE = str.maketrans(RFC4648_ALPHABET, CROCKFORD_ALPHABET)
+alphabets = {
+    'base32-crockford': '0123456789ABCDEFGHJKMNPQRSTVWXYZ', 
+    'base32-rfc4648'  : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+    'base24-microsoft': 'BCDFGHJKMPQRTVWXY2346789',
+}
 
-def b32encode_crockford(data):
-    return base64.b32encode(data).decode('ascii').rstrip('=').translate(TRANSLATION_TABLE)
+def gen_secret(group_spec, separator='-'):
+    data = []
+    total_bits = 0
+    for ngroups, group_size, alphabet in group_spec:
+        nint = len(alphabet)
+        partial_bits = math.log(nint, 2)
+        for _ in range(ngroups):
+            gr = ''.join([alphabet[random.randrange(0, nint)] for _ in range(group_size)])
+            data.append(gr)
+            total_bits += group_size * partial_bits
 
-def group_str(s, size=4, separator='-'):
-    return separator.join([ s[i:i+size] for i in range(0, len(s), size)])
+    secret = separator.join(data)
+    return (secret, total_bits)
+    
+    
+def calculate_group_size(size, group_size_max=5):
+    if size < group_size_max:
+        return size
+    diffs = {}
+    
+    # if size < group_size_max:
+    #    return size
+ 
+    for group_size in range(group_size_max, 0, -1):
+        if group_size > size:
+            continue
+            
+        ngroups, other = divmod(size, group_size)
+        print(size, group_size, ngroups, other)
+        if ngroups == 0:
+            ngroups = 1
+            other = 0
+            
+        if other == 0:
+            diff = 0
+        else:
+            diff = group_size - other
 
-def gen_crockford(nbytes=10):
-    data = random.randbytes(nbytes)
-    data_b32_crockford = b32encode_crockford(data)
-    return data_b32_crockford 
+        # print(size, group_size, ngroups, other, diff)
+
+        if diff not in diffs:
+            diffs[diff] = []
+        if ngroups <= group_size:
+            diffs[diff].append((ngroups, group_size, other))
+
+    for diff in sorted(diffs):
+        print(diff, diffs[diff])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a Crockford base32 secret')
@@ -33,28 +73,37 @@ if __name__ == '__main__':
         default=16,
         help='Number of random characters to generate'
     )
+    parser.add_argument(
+        '-a',
+        '--alphabet',
+        default='base32-crockford',
+        help='Character alphabet'
+    )
     args = parser.parse_args()
     
     if args.chars <= 0:
         parser.error('--chars must be a positive integer')
 
-    nchars = args.chars
-    nbits = int(math.ceil(args.chars * 5))
-    nbytes = int(math.ceil(nbits / 8))
+    group_spec = [[4, 5, alphabets[args.alphabet]]]
 
-    data_b32 = gen_crockford(nbytes=nbytes)[:nchars]
-    secret = group_str(data_b32)
+    secret, bits = gen_secret(group_spec)
     print(secret)
+    print(bits)
 
 
-def calculate_group_size(size, group_size_max=5):
-    if size < group_size_max:
-        return size
-
-    for group_size in range(group_size_max, 0, -1):
-        ngroups, other = divmod(size, group_size)
-        print(size, group_size, ngroups, other)
+# Bits
+# Alphabet name
+# Alphabet chars
+# Group-spec
+#   * number of groups
+#   * group_size
+#   * alphabet-name or 
         
-for i in range(1, 128):
-    calculate_group_size(i)
-    
+         
+#for i in range(1, 128):
+#    print(i)
+#    print('----')
+#    calculate_group_size(i)
+#    
+#    print()
+
